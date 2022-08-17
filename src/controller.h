@@ -10,8 +10,7 @@ class Controller
 
 public:
     enum ActionType{
-        GoBackward,
-        GoForward,
+
         Filter,
         RevertFilter,
         OpenFile,
@@ -25,12 +24,9 @@ public:
         RevertFind,     
         FindNext,
         FindPrevious,
-        Highlight,
-        Usage,          // unused
+        Highlight,         
         Shortcut,       
-//        PauseSource,    // unused
-        ExportSubLog,   // future
-//        SaveProject,    // unused
+        ExportSubLog,   
     };
 private:
     Controller();

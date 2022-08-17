@@ -28,6 +28,9 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(myMessageHandler);
     QApplication a(argc, argv);
 
+    QStyle* style = QApplication::style();
+    QIcon icon = style->standardIcon(QStyle::SP_FileDialogDetailedView);
+    a.setWindowIcon(icon);
 
     MainWindow w;
     w.show();

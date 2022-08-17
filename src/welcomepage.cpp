@@ -27,7 +27,7 @@ void WelcomePage::showEvent(QShowEvent *)
 
     auto box = new QGridLayout;
     box->setMargin(30);
-    box->addWidget(createLabel("Open Local File..."), 1,0);
+    box->addWidget(createLabel("打开本地文件..."), 1,0);
  //   box->addWidget(createLabel("Open Recent File"), 1, 0);
 //    box->addWidget(createLabel("test3"), 0, 2);
 //    box->addWidget(createLabel("test4"), 2, 2);
@@ -39,7 +39,8 @@ void WelcomePage::showEvent(QShowEvent *)
 QPushButton* WelcomePage::createLabel(QString text)
 {
     auto btn = new QPushButton;
-    if (text == "Open Local File..."){
+    if (text == "打开本地文件...")
+    {
         connect(btn,&QPushButton::clicked,[](){
                    // auto type = (Controller::ActionType)(Str.toInt());
                     Controller::instance().actionFor(Controller::OpenFile)->trigger();

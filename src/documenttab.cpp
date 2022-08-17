@@ -108,7 +108,7 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
     connect(edit, &LogEdit::menuRequested,
             [this, edit,isSub](QPoint point, const QString& cursorWord, int lineNum){
         auto menu = new QMenu;
-        auto a = menu->addAction("Add to Timeline");
+        auto a = menu->addAction("添加到时间线");
         connect(a, &QAction::triggered, [this, edit, lineNum]{
             auto log = edit->getLog();
 
@@ -135,19 +135,19 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
             if (cursorWord.length() > 15)
                 showWord = cursorWord.mid(0, 12)+"...";
 
-            a = menu->addAction("Highligt "+showWord);
+            a = menu->addAction("高亮"+showWord);
             connect(a, &QAction::triggered, [edit, cursorWord]{
                 edit->highlighter()->quickHighlight(cursorWord);
             });
 
-            a = menu->addAction("Search "+showWord);
+            a = menu->addAction("搜索"+showWord);
             connect(a, &QAction::triggered, [cursorWord]{
                 auto searchBar = Controller::instance().searchBar();
                 searchBar->fill(cursorWord);
                 searchBar->buildSearchRequest();
             });
 
-            a = menu->addAction("Filter "+showWord);
+            a = menu->addAction("过滤"+showWord);
             connect(a, &QAction::triggered, [this, cursorWord]{
                 SearchArg arg;
                 arg.pattern = cursorWord;
@@ -155,7 +155,7 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
                 doFilter(arg);
             });
 
-            a = menu->addAction("Revert Filter "+showWord);
+            a = menu->addAction("反向过滤"+showWord);
             connect(a, &QAction::triggered, [this, cursorWord]{
                 SearchArg arg;
                 arg.pattern = cursorWord;
@@ -164,18 +164,18 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
             });
         }
 
-        a = menu->addAction("Remove Search Highlight");//更好的交互方式
+        a = menu->addAction("删除搜索高亮");//更好的交互方式
         connect(a, &QAction::triggered, edit->highlighter(), &Highlighter::clearSearchHighlight);
 
         menu->addSeparator();
-        a = menu->addAction("Copy");
+        a = menu->addAction("复制");
         connect(a, &QAction::triggered, edit, &LogEdit::copy);
         if (isSub){
             menu->addSeparator();
-            a = menu->addAction("Export File...");
+            a = menu->addAction("导出文件");
             connect(a,&QAction::triggered,[this,edit]{
                 auto log = edit->getLog();
-                auto savepath = QFileDialog::getSaveFileName(this, "Export Filter", QString(), "*.log");
+                auto savepath = QFileDialog::getSaveFileName(this, "导出", QString(), "*.log");
                 if (!savepath.isEmpty()){
 
                     auto hint = "[this file is Filtered from: " + mName;
@@ -323,12 +323,7 @@ void DocumentTab::bindTaglist()
     mConnections.push_back(connect(taglist, &TagListWidget::onTagDeleted, [this](const QString& text){
         currentEdit()->highlighter()->clearQuickHighlight(text);
     }));
-//    mConnections.push_back(connect(taglist, &TagListWidget::requestSearchTag, [](const QString& keyword){
-//        auto searchBar = Controller::instance().searchBar();
-//        qDebug()<< "Seach Tag"<< keyword;
-//        searchBar->fill(keyword);
-//        searchBar->buildSearchRequest();
-//    }));
+
     mConnections.push_back(connect(taglist, &TagListWidget::onTagColorChanged, [this](const QString& keyword, QColor color){
         //sqDebug()<< "change color"<< keyword;
         currentEdit()->highlighter()->quickHighlight(keyword, color);
@@ -354,8 +349,8 @@ void DocumentTab::addHighlight()
     bool ok = false;
     QString text = QString("");
     while(true){
-            text =QInputDialog::getText(this, tr("Highlight"),
-                    tr("Key Word:"), QLineEdit::Normal,
+            text =QInputDialog::getText(this, tr("高亮"),
+                    tr("高亮词:"), QLineEdit::Normal,
                    "", &ok);
             if ((!ok )||(ok && !text.isEmpty()))
             {
@@ -378,8 +373,8 @@ void DocumentTab::locateLine()
     // 关闭  "?"  按钮
     bool ok = false;
     auto lineNum = QInputDialog::getInt(this,
-            "Jump",
-            QString("Range:%1 - %2").arg(range.from).arg(range.to),
+            "跳转到行",
+            QString("范围:%1 - %2").arg(range.from).arg(range.to),
             range.from,
             range.from, range.to, 1,
             &ok);
@@ -397,13 +392,13 @@ void DocumentTab::setPattern()
     //bool ok = false;
     QDialog dialog(this);
     QFormLayout form(&dialog);
-    form.addRow(new QLabel("Do Not Forget Escape Characters In C-String!"));
+    form.addRow(new QLabel("正则表达式:"));
     // Value1
-    QString time = QString("Time Reg: ");
+    QString time = QString("时间匹配模式: ");
     QLineEdit *timeInput =new QLineEdit(&dialog);
     form.addRow(time, timeInput);
     // Value2
-    QString content = QString("Content Rex : ");
+    QString content = QString("内容匹配模式 : ");
     QLineEdit *contentInput = new QLineEdit(&dialog);
 
     form.addRow(content, contentInput);
@@ -422,7 +417,7 @@ void DocumentTab::setPattern()
         qDebug()<<"regExp" << timeInput->text();
         auto isValid = Controller::instance().setTimeRx(timeInput->text());
         if (!isValid){
-            QMessageBox::warning(this, "ERROR", "Time Pattern Is Not Valid", QMessageBox::Ok);
+            QMessageBox::warning(this, "ERROR", "时间匹配: 非法正则表达式", QMessageBox::Ok);
         }
     }
     if(!contentInput->text().isEmpty())
@@ -430,7 +425,7 @@ void DocumentTab::setPattern()
         qDebug()<<"regExp" << contentInput->text();
         auto isValid = Controller::instance().setContentRx(contentInput->text());
         if (!isValid){
-            QMessageBox::warning(this, "ERROR", "Content Pattern Is Not Valid", QMessageBox::Ok);
+            QMessageBox::warning(this, "ERROR", "内容匹配: 非法正则表达式", QMessageBox::Ok);
         }
     }
 
@@ -449,13 +444,13 @@ void DocumentTab::splitFile()
     QFormLayout form(&dialog);
     //form.addRow(new QLabel("Split Range:"));
     // Value1
-    QString start = QString("Start Line: ");
+    QString start = QString("起始行: ");
     QSpinBox *startInput = new QSpinBox(&dialog);
     startInput->setMaximum(range.to);
     startInput->setMinimum(range.from);
     form.addRow(start, startInput);
     // Value2
-    QString end = QString("End line: ");
+    QString end = QString("终止行: ");
     QSpinBox *endInput = new QSpinBox(&dialog);
     endInput->setMaximum(range.to);
     endInput->setMinimum(range.from);
@@ -473,7 +468,7 @@ void DocumentTab::splitFile()
         }
 
         else if (startInput->value() >= endInput->value()){
-            QMessageBox::warning(this, "Illegal input", "Start Should Smaller Than End", QMessageBox::Ok);
+            QMessageBox::warning(this, "非法输入", "起始行应小于终止行", QMessageBox::Ok);
         }
         else{
             qDebug()<<"Split Range ok" ;
@@ -523,8 +518,8 @@ void DocumentTab::findKeyword()
     bool ok = false;
     QString keyword = QString("");
     while(true){
-            keyword =QInputDialog::getText(this, tr("Find"),
-                    tr("Key Word:"), QLineEdit::Normal,
+            keyword =QInputDialog::getText(this, tr("查找"),
+                    tr("查找词:"), QLineEdit::Normal,
                    "", &ok);
             if ((!ok )||(ok && !keyword.isEmpty()))
             {
@@ -544,7 +539,7 @@ void DocumentTab::findKeyword()
 
 void DocumentTab::exportTimeLineToImage()
 {
-    auto savepath = QFileDialog::getSaveFileName(this, "Export Timeline", QString(), "*.png");
+    auto savepath = QFileDialog::getSaveFileName(this, "导出时间线", QString(), "*.png");
     if (savepath.isEmpty())
         return;
     if (!savepath.endsWith(".png"))
@@ -607,7 +602,7 @@ void DocumentTab::onSubLogCreated(shared_ptr<SubLog> subLog)
 {
     if (!subLog->availRange().isValid()) {
         if (QMessageBox::Ok
-                != QMessageBox::warning(this, "Search Result", "No Matched Text", QMessageBox::Ok, QMessageBox::Cancel)) {
+                != QMessageBox::warning(this, "查找结果", "没有匹配的文本", QMessageBox::Ok)) {
             return;
         }
     }
@@ -631,9 +626,9 @@ void DocumentTab::onFindDone(shared_ptr<ILog> who, SearchResult ret)
     qDebug()<< who.get();
     if (ret.matchedText.isEmpty()) {
         if (ret.line <= 1) {
-            QMessageBox::warning(this, "Search", "Reach The Top,No Matched Result");
+            QMessageBox::warning(this, "查找", "到达顶部, 没有匹配的文本", QMessageBox::Ok);
         } else {
-            QMessageBox::warning(this, "Search", "Reach The Bottom,No Matched Result");
+            QMessageBox::warning(this, "查找", "到达底部, 没有匹配的文本", QMessageBox::Ok);
         }
         return;
     }
@@ -761,7 +756,7 @@ void DocumentTab::revertFilter()
 {
     qDebug()<< "revert filter trigger";
     FilterDialog dlg;
-    dlg.setWindowTitle("Revert Filter");
+    dlg.setWindowTitle("反向过滤");
     while(true){
         if (dlg.exec() == QDialog::Rejected)
         {
@@ -782,7 +777,7 @@ void DocumentTab::filter()
 {
     qDebug()<< "filter trigger";
     FilterDialog dlg;
-    dlg.setWindowTitle("Filter");
+    dlg.setWindowTitle("过滤");
     while (true) {
         if (dlg.exec() == QDialog::Rejected)
         {

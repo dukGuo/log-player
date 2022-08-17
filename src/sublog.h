@@ -19,9 +19,6 @@ public:
 
     SearchArg getSearchArg();
 
-    //bool onParentRangeChanged(Range before, Range after) override;
-
-    //bool saveTo(QFile& file) override;
 
 private:
     SearchArg mSearchArg;

@@ -88,7 +88,7 @@ void MainWindow::buildMenuBar()
 
 void MainWindow::buildToolBar()
 {
-    auto Bar = new QToolBar("Tool");
+    auto Bar = new QToolBar("工具栏");
     Bar->setAllowedAreas(Qt::TopToolBarArea|Qt::BottomToolBarArea);
     Bar->setFloatable(false);
     //Bar->setContextMenuPolicy(Qt::NoContextMenu);
@@ -109,11 +109,11 @@ void MainWindow::buildToolBar()
 
 QMenu*   MainWindow::buildFileMenu()
 {
-    auto menu = new QMenu("File");
+    auto menu = new QMenu("文件");
     auto action = Controller::instance();
     //menu->addMenu("Open...");
     menu->addAction(action.actionFor(Controller::OpenFile));
-    auto recentFileMenu = menu->addMenu("Recent File");
+    auto recentFileMenu = menu->addMenu("最近打开...");
     mRecentFile.mount(recentFileMenu, bind(&MainWindow::doOpenFile, this, placeholders::_1));
     menu->addAction(action.actionFor(Controller::CloseTab));
     //menu->addMenu("Settings"); // TODO  设置对话窗口
@@ -123,12 +123,12 @@ QMenu*   MainWindow::buildFileMenu()
     menu->addSeparator();
     menu->addAction(action.actionFor(Controller::Shortcut));
     menu->addSeparator();
-    menu->addAction("Exit", this, &QMainWindow::close);
+    menu->addAction("退出", this, &QMainWindow::close);
     return menu;
 }
 QMenu*   MainWindow::buildSearchMenu()
 {
-    auto menu = new QMenu("Search");
+    auto menu = new QMenu("查找");
     auto action = Controller::instance();
     //menu->addMenu("Find");
     menu->addAction(action.actionFor(Controller::Find));
@@ -144,7 +144,7 @@ QMenu*   MainWindow::buildSearchMenu()
 }
 QMenu*   MainWindow::buildHighlightMenu()
 {
-    auto menu = new QMenu("Highlight");
+    auto menu = new QMenu("高亮");
     // menu->addMenu("Add Rules"); 
     auto action = Controller::instance();
     menu->addAction(action.actionFor(Controller::Highlight));
@@ -159,10 +159,11 @@ QMenu*   MainWindow::buildHighlightMenu()
 }
 QMenu*   MainWindow::buildTimelineMenu()
 {
-    auto menu = new QMenu("Timeline");
+    auto menu = new QMenu("时间线");
     auto action = Controller::instance();
     menu->addAction(action.actionFor(Controller::SetPattern));
     //menu->addMenu("Export Timeline");
+    menu->addSeparator();
     menu->addAction(action.actionFor(Controller::SaveTimeLine));
     //menu->addMenu("Clear Timeline");
     menu->addAction(action.actionFor(Controller::ClearTimeLine));

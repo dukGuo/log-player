@@ -4,8 +4,6 @@
 Controller::Controller()
 {
     qDebug()<< "Controller Constructing";
-    // setAction(GoBackward,QString("Backward"),QString("Ctrl+["),true);
-    // setAction(GoForward,QString("Forward"),QString("Ctrl+]"),true);
     setAction(Filter,QString("过滤"),QString("Ctrl+L"),true);
     setAction(RevertFilter,QString("反向过滤"),QString("Ctrl+Shift+L"),true);
     setAction(OpenFile,QString("打开文件..."),QString("Ctrl+O"));
@@ -20,9 +18,7 @@ Controller::Controller()
     setAction(FindNext,QString("下一个"),QString("Ctrl+N"),true);
     setAction(FindPrevious,QString("上一个"),QString("Ctrl+M"),true);
     setAction(Highlight,QString("添加高亮"),QString("Ctrl+J"),true);
-    setAction(Usage,QString("Usage"),QString(""));
     setAction(Shortcut,QString("快捷键"),QString(""));
-    //setAction(SaveProject,QString("Unused! Save Project"),QString(""),true);
     timeRx = QRegExp("\\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]\\s[0-2][0-9]:[0-6][0-9]:[0-6][0-9].[0-9]{3}\\]");
     //timeRx = QRegExp("\\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]");
     contentRx= QRegExp(".*");
@@ -55,7 +51,7 @@ Controller& Controller::instance()
 QString Controller::getShortcutHint()
 {
     QStringList seqs;
-    //seqs.push_back("[Global]");
+
     for (auto&& action : mActions.values()) {
         if(action == nullptr || action->shortcut().isEmpty())
             continue;
@@ -68,11 +64,6 @@ QString Controller::getShortcutHint()
         seqs.push_back(description);
     }
 
-    //seqs.push_back("\n------------------");
-    //seqs.push_back("[Editor]");
-    //seqs.push_back("Highlight:\t\tCtrl+E");
-    //seqs.push_back("Filter:\t\tCtrl+R");
-    //seqs.push_back("Add To Timeline:\t\tCtrl+T");
 
     return seqs.join('\n');
 }

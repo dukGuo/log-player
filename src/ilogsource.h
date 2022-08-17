@@ -10,7 +10,7 @@
 #include <memory>
 #include "event.h"
 
-//#include "longtimeoperation.h"
+
 
 
 class ILog;
@@ -25,23 +25,11 @@ public:
     virtual ~ILogSource(){}
 
     virtual bool open() = 0;
-    // virtual void pause() {
-    //     QMutexLocker l(&mCtrlMutex);
-    //     mPaused = true;
-    // }
-    // virtual void resume() {
-    //     QMutexLocker l(&mCtrlMutex);
-    //     mPaused = false;
-    //     qDebug()<<"notify";
-    //     mCtrlCond.notify_one();
-    // };
+   
     virtual void close() = 0;
 
     virtual std::shared_ptr<ILog> getLog() = 0;
 
-//    virtual shared_ptr<LongtimeOperation> getLoadProgress(){
-//        return mLoadOp;
-//    }
 
     virtual bool setCodec(QString name) {
         mCodec = QTextCodec::codecForName(name.toStdString().c_str());
@@ -52,44 +40,26 @@ public:
         return mCodec;
     }
 
-    static ILogSource *createLogSourceFromType(QString type, QObject* eventHandler);
+    // static ILogSource *createLogSourceFromType(QString type, QObject* eventHandler);
 
-    virtual QString getSimpleDesc() = 0;
+     virtual QString getSimpleDesc() = 0;
 
-//    bool isPaused(){return mPaused;}
-
-//    bool isFinished(){return mFinished;}
-
-//public:
-    //virtual QJsonValue saveToJson();
-    //virtual void loadFromJson(const QJsonValue &jo);
 
 public:
     void post(BaseEvent* ev) {
-        // QMutexLocker l(&mCtrlMutex);
         if ( (EventsType)ev->type() == evLogChange) {
             qDebug()<<"wait";
-        //    mCtrlCond.wait(&mCtrlMutex);
         }
-
-        // if ((EventsType)ev->type() == evSourceFinish) {
-        //     mFinished = true;
-        // }
 
         qApp->postEvent(mEventHandler, ev);
     }
 
 
 protected:
-    //shared_ptr<LongtimeOperation> mLoadOp;
     QTextCodec* mCodec;
 
 private:
     QObject* mEventHandler;
-    // QMutex mCtrlMutex;
-    // QWaitCondition mCtrlCond;
-    // bool mPaused{false};
-    // bool mFinished{false};
     QString mType;
 };
 

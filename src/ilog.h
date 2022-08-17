@@ -37,9 +37,6 @@ public:
     std::shared_ptr<ILog> parent();
     std::list<std::shared_ptr<ILog>> children();
 
-//    shared_ptr<LongtimeOperation> createChild(SearchArg arg, QString id = "");
-//    shared_ptr<LongtimeOperation> find(SearchArg arg, Location loc, bool forward);
-
     void setSource(const std::shared_ptr<ILogSource>& source) {
         mSource = source;
     }

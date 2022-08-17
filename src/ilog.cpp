@@ -54,23 +54,15 @@ list<shared_ptr<ILog> > ILog::children()
 
 int ILog::find(SearchArg arg, Location loc, bool forward)
 {
-    //shared_ptr<LongtimeOperation> op(new LongtimeOperation);
-
     auto range = availRange();
     if (forward) {
         range.from = loc.line;
     } else {
         range.to = loc.line;
     }
-//    op->setProgressMax(range.to);
-//    op->setProgressMin(range.from);
+
 
     QThreadPool::globalInstance()->start([=]{
-//        op->waitStart();
-//        if (op->isCanceled()) {
-//            op->done();
-//            return;
-//        }
 
         auto patternLen = arg.pattern.length();
         auto doSearch = [=](int line, int pos) {
@@ -105,21 +97,18 @@ int ILog::find(SearchArg arg, Location loc, bool forward)
         if (forward) {
             for (auto i = range.from+1; i <= range.to /*&& !op->isCanceled()*/; i++) {
                 ret = doSearch(i, 0);
-//                op->publishProgress();
                 if (ret.offset >= 0)
                     goto __return;
             }
         } else {
             for (auto i = range.to - 1; i >= range.from /*&& !op->isCanceled()*/; i--) {
                 ret = doSearch(i, -1);
- //               op->publishProgress();
                 if (ret.offset >= 0)
                     goto __return;
             }
         }
 
 __return:
-//        op->done();
         post(new FindDoneEvent(shared_from_this(), ret));
     });
 
@@ -142,10 +131,6 @@ int ILog::createChild(SearchArg arg, QString id)
         taskRanges.push_back({offset, range.to});
     }
 
-
-//    op->setProgressMin(0);
-//    op->setProgressMax(taskRanges.size());
-
     QtConcurrent::run([this, arg, taskRanges, range, id]{
 
 
@@ -164,13 +149,13 @@ int ILog::createChild(SearchArg arg, QString id)
             ret.reserve(r.size());
             QString line;
 
-//            qDebug()<<r.from<<r.to;
             for (int i = r.from; i <= r.to ; i++) {
                 line.clear();
                 line.append(readLine(i));
 
                 auto match = arg.regex ? line.contains(pattern) : line.contains(arg.pattern, caseSense);
-                if (match ^ revert) {//match 0 revert 1 || match 1 revert 0
+                if (match ^ revert) {
+                    //match 0 revert 1 || match 1 revert 0
                     ret.push_back(i);
                 }
             }
@@ -187,7 +172,6 @@ int ILog::createChild(SearchArg arg, QString id)
         }
         sub->mLineInParent.shrink_to_fit();
 
-        //op->done();
         qDebug()<< "Emit Sub Create";
         post(new SubLogCreatedEvent(sub));
     });

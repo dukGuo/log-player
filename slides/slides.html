@@ -10,7 +10,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
   <link rel="stylesheet" href="dist/base.css">
-  <link href="/dist/tailwind.css" rel="stylesheet">
+  <link rel="stylesheet" href="/dist/tailwind.min.css">
     <style>
       .font-sans {
         font-family: 'Lato', 'SimHei', 'STHeiti', 'SimHei', 'Serif';
@@ -45,23 +45,11 @@
   <!-- <link rel="stylesheet" href="dist/reset.css">
   <link rel="stylesheet" href="dist/reveal.css">  -->
    <!-- <link href="https://fonts.font.im/css?family=Source+Serif+Pro%7CLato%7CInconsolata" rel="stylesheet" type="text/css"> -->
+
   <style>
-    .reveal .sourceCode {  /* see #7635 */
-      overflow: visible;
-    }
-    code{white-space: pre-wrap;}
-    span.smallcaps{font-variant: small-caps;}
-    div.columns{display: flex; gap: min(4vw, 1.5em);}
-    div.column{flex: 1;}
-    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
-    ul.task-list li input[type="checkbox"] {
-      width: 0.8em;
-      margin: 0 0.8em 0.2em -1.6em;
-      vertical-align: middle;
-    }
-    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
-  </style>
+    .float-right{float: right;}
+    .float-left{float: left;}
+    </style>
   <!-- <link rel="stylesheet" href="dist/theme/simple.css" id="theme"> -->
 </head>
 <body>
@@ -69,91 +57,369 @@
     <div class="slides">
 
 <section id="title-slide">
-  <h1 class="title">日志查看工具</h1>
-  <p>log-player</p>
-  <p class="date">郭大可</p>
+  <h1 class="title">日志查看工具:log-player</h1>
+
+            <p style=" height: 300px;text-align: right;margin-top: 100px;padding-right: 60px;">
+              郭大可 2022-8
+            </p>
 </section>
 
 <section>
-<section id="功能简介" class="title-slide slide level1">
-<h1>功能简介</h1>
+  <section id="功能简介" class="title-slide slide level1">
+    <h1>功能简介</h1>
 
+  </section>
+  <section id="界面布局" class="slide level2">
+    <h2>界面布局</h2>
+    <ul>
+      <li>初始化页 </li>
+      <p>未打开文件时，显示初始化页</p>
+      <hr>
+      <li>主页面</li>
+      <img  width="250px" data-src="image/slides/1660705878927.png" title="welcomePage"
+        alt="welcomePage" style="position:absolute;top:120px ;left: 600px;"/>
+
+      <img width="690px" style="left:80px;margin-top: 0px;" data-src="image/slides/mainPage.png" alt="1660706564297" />
+    </ul>
+      
+    
+  </section>
+  <section id="日志查看" class="slide level2">
+    <h2>日志查看</h2>
+   
+    <ul>
+      <hr>
+      <li>文本展示</li>
+      <ul>
+        <li>打开大文件: 百Mb级</li>
+        <li>行号显示</li>
+      </ul>
+      <li>多标签显示</li>
+      <ul>
+        <li>打开多个文件</li>
+      </ul>
+      <li>跳转到指定行</li>
+      <ul>
+        <li>菜单栏/快捷键</li>
+      </ul> 
+      <li>最近打开</li>
+      <li>高亮当前行</li>
+      <img src="image/slides/logedit.png" width="550px" style="position:absolute;top:280px ;right: 50px;">
+
+    </ul>
+      </section>
+  <section id="查询与高亮" class="slide level2">
+    <h2>查询与高亮</h2>
+    <ul>
+      <img src="image/slides/search_highlight.png" width="700px" style="margin: 0px;padding-left: 25px;">
+      <li>
+        <p>右键快捷查询/高亮</p>
+      </li>
+      <li>
+        <p>高亮关键词</p>
+        <ul>
+          <li>集中显示高亮列表:&nbsp &nbsp;方便管理高亮词及色彩</li>
+          <li>自定义高亮色彩: &nbsp &nbsp;多词同色</li>
+        </ul>
+      </li>
+      <li>
+        <p>查询关键词</p>
+        <ul>
+          <li>大小写模糊</li>
+          <li>正则表达式匹配</li>
+        </ul>
+      </li>
+    </ul>
+  </section>
+  <section id="日志过滤" class="slide level2">
+    <h2>日志过滤</h2>
+    <ul>
+      <img class="float-right" src="image/slides/filter.png" width="500px" style="margin: 40px 20px 20px 35x;">
+      <hr>
+      <li>右键快捷过滤</li>
+      <li>大小写模糊/正则表达式</li>
+      <p><strong>eg:&nbsp;</strong>&nbsp;\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]</p>
+      <li>正向/反向过滤</li>
+      <li>子窗口显示</li>
+      <ul>
+        <li>子窗口搜索/高亮</li>
+        <li>支持嵌套过滤(右键)</li>
+      </ul>
+    </ul>
+  </section>
+  <section id="时间线分析" class="slide level2">
+    <h2>时间线分析</h2>
+    <ul>
+      <img class="float-right" src="image/slides/timeline.png" width="500px" style="margin: 40px 20px 20px 35px;">
+      <hr>
+      <li>以行号为ID，时间为副ID，整行为内容
+        <ul>
+          <li>更改时间/内容匹配模板</li>
+          <p><strong>eg:&nbsp;</strong>&nbsp;\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]</p>
+          <li>子窗口添加时间点</li>
+        </ul>
+      </li>
+      <li>通过时间线定位特定行
+        <ul>
+          <li>主/子窗口协同显示</li>
+          <li>方向键快捷切换</li>
+        </ul>
+      </li>
+      <li>导出当前时间线</li>
+    </ul>
+  </section>
+  <section id="番外功能" class="slide level2">
+    <h2>番外功能</h2>
+    <ul>
+      <li>文件分割
+        <ul>
+          <li>指定行范围分割</li>
+          <li>保存并新建标签页打开</li>
+        </ul>
+        <table>
+          <td><img src="image/slides/split1.png", width="460px"></td>
+          <td><img src="image/slides/split2.png"  width="460px"></td>
+        </table>
+      </li>
+    </ul>
+  </section>
+    <section id="番外功能2" class="slide level2">
+      <h2>番外功能(cont'd)</h2>
+      <ul>
+        <li>过滤结果导出</li>
+        <img src="image/slides/export.png" width="640px" style="margin-left: 30px;">
+        <li>支持快捷键</li>
+      </ul>
+    </section>
 </section>
-<section id="界面布局" class="slide level2">
-<h2>界面布局</h2>
-<ul>
-<li>asdf</li>
-</ul>
-</section>
-<section id="日志查看" class="slide level2">
-<h2>日志查看</h2>
-<ul>
-<li>文本展示</li>
-<li>多标签显示</li>
-<li>最近打开</li>
-<li>跳转到指定行</li>
-<li>高亮当前行</li>
-</ul>
-</section>
-<section id="查询与高亮" class="slide level2">
-<h2>查询与高亮</h2>
-<ul>
-<li><p>右键快捷查询/高亮</p></li>
-<li><p>高亮关键词</p>
-<ul>
-<li>集中显示高亮列表</li>
-<li>自定义高亮背景</li>
-</ul></li>
-<li><p>查询关键词</p>
-<ul>
-<li>大小写模糊</li>
-<li>正则表达式匹配</li>
-</ul></li>
-</ul>
-</section>
-<section id="日志过滤" class="slide level2">
-<h2>日志过滤</h2>
-<ul>
-<li>右键快捷过滤</li>
-<li>大小写模糊/正则表达式</li>
-<li>正向/反向过滤</li>
-<li>子窗口显示</li>
-<li>支持嵌套过滤</li>
-</ul>
-</section>
-<section id="时间线分析" class="slide level2">
-<h2>时间线分析</h2>
-<ul>
-<li>以行号为ID，时间为副ID，整行为内容
-<ul>
-<li>更改时间及内容的匹配模板</li>
-<li>从子窗口添加时间节点</li>
-</ul></li>
-<li>通过时间线定位特定行
-<ul>
-<li>父子窗口协同显示</li>
-<li>方向键快捷切换</li>
-</ul></li>
-<li>导出当前时间线</li>
-</ul>
-</section>
-<section id="番外功能" class="slide level2">
-<h2>番外功能</h2>
-<ul>
-<li>文件分割
-<ul>
-<li>指定行范围分割</li>
-<li>保存并新建标签页打开</li>
-</ul></li>
-<li>过滤结果导出</li>
-<li>支持快捷键</li>
-</ul>
-</section></section>
 <section>
-<section id="模块设计与实现" class="title-slide slide level1">
-<h1>模块设计与实现</h1>
+  <section id="模块设计与实现" class="title-slide slide level1">
+    <h1>模块设计与实现</h1>
 
+  </section>
+  <section id="环境" class="slide level2">
+    <h2>环境</h2>
+    <ul>
+      <hr>
+      <li>语言: C++</li>
+      <li>Qt 5.15</li>
+    </ul>
+  </section>
+  <section id="后端" class="slide level2">
+    <h2>后端</h2>
+    <ul>
+      <li>主要功能: 打开日志，读取并解析日志内容，输出给界面</li> 
+      <img src="image/slides/backend.png" width="650px" style="margin: 0px;padding-left: 10px;" > 
+      <p>
+         界面通过FileSource提供的getLog()方法获取文本值
+      </p>
+    </ul>
+    
+
+  </section>
+  <section id="后端-contd" class="slide level2">
+    <h2>后端 (cont'd)</h2>
+    <ul>
+      <li>文件读取方式: <strong>open+read</strong> 代替<strong> open+mmap</strong></li>
+    </ul>
+    <pre><code data-trim data-line-numbers="|8|">
+            <script type="text/template">
+              bool FileSource::open()
+                {
+                    if (!mFile.open(QFile::ReadOnly)) {
+                        qCritical()<<"failed to open";
+                        return false;
+                    }
+    
+                    mMem = mFile.map(0, mFile.size(), QFile::MapPrivateOption);
+                    if (!mMem) {
+                        qCritical("mmap failed");
+                        mFile.close();
+                        return false;
+                    }
+    
+                    mLog->init(mMem);
+                    mLog->setSource(shared_from_this());
+    
+                    parse();
+                    return true;
+                }
+            </script>
+          </code></pre>
+          <ul>
+            <p><strong>mmap</strong>通过直接将文件映射到进程的地址空间上,与<strong>read</strong>相比减少了一次Memcpy操作. 只读不需要考虑一致性.</p>
+          </ul>
+  </section>
+  <section id="控制模块" class="slide level2">
+    <h2>控制模块</h2>
+    <ul>
+      <li>Controller.h</li>
+      <pre><code data-trim data-line-numbers="|4-21|,|23,24,27,28|">
+        <script type="text/template">
+class Controller
+{
+public:
+    enum ActionType{
+        Filter,
+        RevertFilter,
+        OpenFile,
+        SplitFile,    
+        CloseTab,
+        LocateLine,
+        SetPattern,   
+        SaveTimeLine,
+        ClearTimeLine,
+        Find,
+        RevertFind,     
+        FindNext,
+        FindPrevious,
+        Highlight,         
+        Shortcut,       
+        ExportSubLog,   
+    };
+
+private:
+    Controller();
+    void setAction(ActionType Type,QString hint,QString shortcut,bool isDoc = false,QString icon = "");
+
+public:
+    static Controller& instance();
+    QString getShortcutHint();
+
+    QAction* actionFor(ActionType type) {
+           return mActions[type];
+       }
+
+       SearchBar* searchBar() {
+           return mSearchBar;
+       }
+
+       void setSearchBar(SearchBar* bar) {
+           mSearchBar = bar;
+       }
+
+       TagListWidget* tagList() {
+           return mTagList;
+       }
+
+       void setTagList(TagListWidget* taglist) {
+           mTagList = taglist;
+       }
+
+       QVector<QAction*> actionsForDoc(){
+           return mDocActions;
+       }
+       QRegExp getTime(){
+           return timeRx;
+       }
+       QRegExp getContent(){
+           return contentRx;
+       }
+       bool setTimeRx(QString pattern);
+       bool setContentRx(QString pattern);
+
+private:
+    QMap<ActionType, QAction*> mActions;
+    QVector<QAction*> mDocActions;
+    TagListWidget* mTagList;
+    SearchBar* mSearchBar;
+    QRegExp timeRx;
+    QRegExp contentRx;
+};
+
+        </script>
+      </code></pre>
+      <li>通过枚举和QVector将控制信号集成起来</li>
+      <li>私有构造函数控制全局只有一个实例</li>
+    </ul>
+  </section>
+  <section id="控制模块-cont" class="slide level2">
+      <h2>控制模块 (cont'd)</h2>
+      <ul>
+        <hr>
+        <li>将与文件(标签页)相关的QAction统一管理</li>
+        <pre><code data-trim data-noescape data-line-numbers>
+              // Controller.h
+              QVector<QAction*> mDocActions;
+              // DocumentTab.cpp
+              void DocumentTab::unBindController()
+              {
+                for (auto& conn : mConnections)
+                disconnect(conn);
+                mConnections.clear();
+              }
+        </code></pre>
+      </ul>
+  </section>
+  <section id="控制模块-cont" class="slide level2">
+    <h2>控制模块 (cont'd)</h2>
+    <ul>
+    <hr>
+    <li>对于每个文档搜索框与高亮标签也是独立的</li>
+    <pre><code data-trim data-line-numbers data-noescpe>
+              // 以高亮标签为例
+              void DocumentTab::loadCurrentTaglist(LogEdit* editor)
+              {
+                auto taglist = Controller::instance().tagList();
+                taglist->clear();
+                for (auto& p : editor->highlighter()->allQuickHighlights()) {
+                 taglist->addTag(p.key, p.color);
+                }
+              }
+              void DocumentTab::unBindController()
+              {
+                for (auto& conn : mConnections)
+                  disconnect(conn);
+                mConnections.clear();
+              }
+            </code></pre>
+      </ul>
+    </section>
+  <section id="高亮子模块" class="slide level2">
+    <h2>高亮子模块</h2>
+    <ul>
+      <li>高亮</li>
+    </ul>
+  </section>
+  <section id="查询子模块" class="slide level2">
+    <h2>查询子模块</h2>
+    <ul>
+      <li>查询</li>
+    </ul>
+  </section>
+  <section id="时间线子模块" class="slide level2">
+    <h2>时间线子模块</h2>
+    <ul>
+      <li>时间线</li>
+    </ul>
+  </section>
+  <section id="其他子模块" class="slide level2">
+    <h2>其他子模块</h2>
+    <ul>
+      <li>搜索框</li>
+      <li>Tag框</li>
+      <li>分割</li>
+    </ul>
+  </section>
+  <section id="核心documenttab" class="slide level2">
+    <h2>核心:DocumentTab</h2>
+    <p>切换连接 深度搜索</p>
+  </section>
 </section>
+<section>
+  <section id="实习感想" class="title-slide slide level1">
+    <h1>实习感想</h1>
+
+  </section>
+  <section id="实习感想-1" class="slide level2">
+    <h2>实习感想</h2>
+    <ul>
+      <li>Qt</li>
+      <li>实践</li>
+    </ul>
+  </section>
+</section>
+
 <section id="环境" class="slide level2">
 <h2>环境</h2>
 <ul>
@@ -161,17 +427,147 @@
 <li>Qt 5.15</li>
 </ul>
 </section>
-<section id="后端" class="slide level2">
+<section data-auto-animate id="后端" class="slide level2">
 <h2>后端</h2>
 <ul>
 <li>主要功能: 打开日志，读取并解析日志内容，输出给界面 img</li>
 </ul>
+<pre ><code class="hljs" data-trim> <script type="text/template">
+#ifndef ILOGSOURCE_H
+#define ILOGSOURCE_H
+#include <QObject>
+#include <QApplication>
+#include <QMutex>
+#include <QWaitCondition>
+#include <QMutexLocker>
+#include <QJsonObject>
+#include <QTextCodec>
+#include <memory>
+#include "event.h"
+
+//#include "longtimeoperation.h"
+
+
+class ILog;
+class ILogSource: public std::enable_shared_from_this<ILogSource>
+{
+public:
+    ILogSource(QObject* eventHandler, QString type)
+        :mEventHandler(eventHandler), mType(type){
+        setCodec("UTF-8");
+    }
+
+    virtual ~ILogSource(){}
+
+    virtual bool open() = 0;
+    // virtual void pause() {
+    //     QMutexLocker l(&mCtrlMutex);
+    //     mPaused = true;
+    // }
+    // virtual void resume() {
+    //     QMutexLocker l(&mCtrlMutex);
+    //     mPaused = false;
+    //     qDebug()<<"notify";
+    //     mCtrlCond.notify_one();
+    // };
+    virtual void close() = 0;
+
+    virtual std::shared_ptr<ILog> getLog() = 0;
+
+//    virtual shared_ptr<LongtimeOperation> getLoadProgress(){
+//        return mLoadOp;
+//    }
+
+    virtual bool setCodec(QString name) {
+        mCodec = QTextCodec::codecForName(name.toStdString().c_str());
+        return true;
+    }
+
+    QTextCodec* getCodec() {
+        this->x;
+        return mCodec;
+    }
+
+    static ILogSource *createLogSourceFromType(QString type, QObject* eventHandler);
+
+    virtual QString getSimpleDesc() = 0;
+
+//    bool isPaused(){return mPaused;}
+
+//    bool isFinished(){return mFinished;}
+
+//public:
+    //virtual QJsonValue saveToJson();
+    //virtual void loadFromJson(const QJsonValue &jo);
+
+public:
+    void post(BaseEvent* ev) {
+        // QMutexLocker l(&mCtrlMutex);
+        if ( (EventsType)ev->type() == evLogChange) {
+            qDebug()<<"wait";
+        //    mCtrlCond.wait(&mCtrlMutex);
+        }
+
+        // if ((EventsType)ev->type() == evSourceFinish) {
+        //     mFinished = true;
+        // }
+
+        qApp->postEvent(mEventHandler, ev);
+    }
+
+
+protected:
+    //shared_ptr<LongtimeOperation> mLoadOp;
+    QTextCodec* mCodec;
+
+private:
+    QObject* mEventHandler;
+    // QMutex mCtrlMutex;
+    // QWaitCondition mCtrlCond;
+    // bool mPaused{false};
+    // bool mFinished{false};
+    QString mType;
+};
+
+#endif // ILOGSOURCE_H
+
+    </script></code></pre>
+    <p> 解释评论等</p>
 </section>
 <section id="后端-contd" class="slide level2">
 <h2>后端 (cont’d)</h2>
 <ul>
 <li>文件读取方式 mmp 代替 read</li>
 </ul>
+          <pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|4,8-11|17|22-24"><script type="text/template">
+          						import React, { useState } from 'react';
+          
+          						function Example() {
+          						  const [count, setCount] = useState(0);
+          
+          						  return (
+          						    <div>
+          						      <p>You clicked {count} times</p>
+          						      <button onClick={() => setCount(count + 1)}>
+          						        Click me
+          						      </button>
+          						    </div>
+          						  );
+          						}
+          
+          						function SecondExample() {
+          						  const [count, setCount] = useState(0);
+          
+          						  return (
+          						    <div>
+          						      <p>You clicked {count} times</p>
+          						      <button onClick={() => setCount(count + 1)}>
+          						        Click me
+          						      </button>
+          						    </div>
+          						  );
+          						}
+          					</script></code></pre>
 </section>
 <section id="控制模块" class="slide level2">
 <h2>控制模块</h2>
@@ -224,13 +620,15 @@
     </div>
   </div>
 
-  <script src="dist/reveal.js"></script>
+
 
   <!-- reveal.js plugins -->
-  <script src="dist/reveal.js"></script>
-  <script src="plugin/notes/notes.js"></script>
-  <script src="plugin/markdown/markdown.js"></script>
-  <script src="plugin/highlight/plugin.js"></script>
+<script src="dist/reveal.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+  <link rel="stylesheet" href="plugin/highlight/style.css">
   <script src="plugin/highlight/highlight.js"></script>
 
   <script>
@@ -388,7 +786,7 @@
       Reveal.initialize({
 
           width: 1024, height: 768,
-          plugins: [RevealMarkdown, RevealHighlight],
+          plugins: [RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight],
           slideNumber: 'c/t',
           controlsTutorial: false,
           progress: false,

@@ -21,10 +21,6 @@ public:
 
     QString getSimpleDesc() override;
 
-//public:
-    //QJsonValue saveToJson() override;
-    //void loadFromJson(const QJsonValue &o) override;
-
 private:
     void parse();
     void doClose();
@@ -32,7 +28,6 @@ private:
 private:
     QFile mFile;
     uchar* mMem{nullptr};
-    bool mRunning{false};
     QFuture<void> mParseTask;
     std::shared_ptr<MemLog> mLog;
 };

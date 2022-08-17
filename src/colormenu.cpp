@@ -3,7 +3,7 @@
 
 ColorMenu::ColorMenu(const QList<std::pair<QString,QColor>>& preset)
 {
-       setTitle("Set Color");
+       setTitle("设置颜色");
 
        for (int i = 0; i < preset.size(); i++) {
            auto name = preset[i].first;
@@ -15,7 +15,7 @@ ColorMenu::ColorMenu(const QList<std::pair<QString,QColor>>& preset)
            });
        }
 
-       connect(addAction("More Color..."), &QAction::triggered, [this]{
+       connect(addAction("更多颜色..."), &QAction::triggered, [this]{
            auto color = QColorDialog::getColor();
            if (color.isValid()) {
                emit chooseColor(color);

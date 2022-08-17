@@ -1,6 +1,7 @@
 #include "searchbar.h"
 #include "utils.h"
 #include <QHBoxLayout>
+#include <QApplication>
 #include <QCompleter>
 #include <QLabel>
 #include <QSettings>
@@ -52,7 +53,9 @@ QComboBox *SearchBar::buildKeywordCombo()
 QToolButton *SearchBar::buildForwardBtn()
 {
     auto btn = new QToolButton;
-    btn->setIcon(QIcon(":/res/img/down.png"));
+    QStyle* style = QApplication::style();
+    QIcon icon = style->standardIcon(QStyle::SP_ArrowDown);
+    btn->setIcon(icon);
     connect(btn, &QToolButton::clicked, this, &SearchBar::forwardBtnClicked);
     return btn;
 }
@@ -60,7 +63,9 @@ QToolButton *SearchBar::buildForwardBtn()
 QToolButton *SearchBar::buildBackwardBtn()
 {
     auto btn = new QToolButton;
-    btn->setIcon(QIcon(":/res/img/up.png"));
+    QStyle* style = QApplication::style();
+    QIcon icon = style->standardIcon(QStyle::SP_ArrowUp);
+    btn->setIcon(icon);
     connect(btn, &QToolButton::clicked, this, &SearchBar::backwardBtnClicked);
     return btn;
 }
