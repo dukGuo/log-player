@@ -2,6 +2,8 @@
 
 A simple tool for log-analysis.
 
+[slides](slides/slides.html)
+
 # Installation
 
 Compiled with Qt 5.15.2
@@ -16,9 +18,9 @@ Compiled with Qt 5.15.2
 * [X] High-Light Keyword in Viewer
 * [X] Search Keyword in Log
 * [X] Filter Needless Log with Specific pattern
-* [ ] Generate Timeline and Export as Picture
-* [ ] Split Large File
-* [ ] Merge Small Files
+* [X] Generate Timeline and Export as Picture
+* [X] Split Large File
+* [X] Merge Small Files
 
 # Bug Lists
 
@@ -36,9 +38,9 @@ Compiled with Qt 5.15.2
 
 * [X] Sub log always be hidden
 
-| Cause              | forget to delete test block,which makes tab-> count always larger than 1. <br />So tab->show() will never be reached |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------- |
-| **Solution** | **elete the test block**                                                                                       |
+| Cause              | forget to delete test block,which makes tab-> count always larger than 1.<br />So tab->show() will never be reached |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------- |
+| **Solution** | **elete the test block**                                                                                      |
 
 * [X] If choose/change the same color for one tag, taglist will add this tag repeatedly. If one of them were removed , the tag's highlight will disappear.
 
@@ -48,12 +50,12 @@ Compiled with Qt 5.15.2
 
 * [X] In highlight/find/filter dialog widget, if closed without any input,  the dialog will cause the application crash.
 
-| Cause         | No handle for reject in dialog,                                                  |
-| ------------- | -------------------------------------------------------------------------------- |
+| Cause              | No handle for reject in dialog,                                                  |
+| ------------------ | -------------------------------------------------------------------------------- |
 | **Solution** | **if input is empty and  dialog is rejected, just do nothing but return** |
 
 * [X] Twice repeated pop-ups when clicked menu.
 
-| Cause         | Repeatedly connect signals and slots |
-| ------------- | ------------------------------------ |
-| **Solution** | **Delete redundant connections**    |
+| Cause              | Repeatedly connect signals and slots   |
+| ------------------ | -------------------------------------- |
+| **Solution** | **Delete redundant connections** |
