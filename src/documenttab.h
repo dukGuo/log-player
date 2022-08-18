@@ -82,13 +82,6 @@ private:
     FocusManager mFocusManager;
     std::shared_ptr<ILogSource> mLogSource;
     QVector<QMetaObject::Connection> mConnections;
-//    std::shared_ptr<ILogSource> mLogSource;
-//    LogViewer* mLogViewer;
-//    FocusManager mFocusManager;
-//    QVector<QMetaObject::Connection> mConnections;
-//    TimeLine* mTimeLine;
-//    QString mName;
-//    unique_ptr<LoadingPhase> mLoadingPharse;
 
 };
 

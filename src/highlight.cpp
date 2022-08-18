@@ -9,7 +9,6 @@ Highlighter::Highlighter(QTextDocument* doc): QSyntaxHighlighter(doc)
 
 void Highlighter::highlightBlock(const QString &text) {
     bool searchHlApplied = false;
-
     //选词高亮
     for (auto p : mQuickHighLights) {
         int i = 0;
@@ -18,12 +17,10 @@ void Highlighter::highlightBlock(const QString &text) {
         fmt.setFontUnderline(true);
         fmt.setForeground(Qt::white);
         fmt.setBackground(p.color);
-
         if (!searchHlApplied && p.key == mSearchHighLight.key) {
             fmt.setFontUnderline(true);
             searchHlApplied=true;
         }
-
         while ((i = text.indexOf(p.key, i, p.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive)) >= 0) {
             setFormat(i, len, fmt);
             i+=len;
@@ -75,27 +72,7 @@ void Highlighter::searchHighlight(const QString &text, bool caseSensitive)
     rehighlight();
 }
 
-//QJsonObject Highlighter::saveToJson()
-//{
-//    QJsonObject o;
-//    o["searchHl"] = mSearchHighLight.saveToJson();
-//    QJsonArray quickHls;
-//    for (auto&& v : mQuickHighLights.values()) {
-//        quickHls.append(v.saveToJson());
-//    }
-//    o["quickHls"] = quickHls;
-//    return o;
-//}
 
-//void Highlighter::loadFromJson(QJsonObject o)
-//{
-//    mSearchHighLight.loadFromJson(o["searchHl"].toObject());
-//    for (auto&& v : o["quickHls"].toArray()) {
-//        HighlightPattern p;
-//        p.loadFromJson(v.toObject());
-//        mQuickHighLights[p.key] = p;
-//    }
-//}
 
 void Highlighter::clearSearchHighlight()
 {
@@ -116,19 +93,3 @@ void Highlighter::clearQuickHighlight(const QString& text)
     rehighlight();
 }
 
-
-//QJsonObject HighlightPattern::saveToJson()
-//{
-//    QJsonObject o;
-//    o["key"] = key;
-//    o["caseSentive"] = caseSensitive;
-//    o["color"] = color.name();
-//    return o;
-//}
-
-//void HighlightPattern::loadFromJson(QJsonObject o)
-//{
-//    key = o["key"].toString();
-//    caseSensitive = o["caseSentive"].toBool();
-//    color = o["color"].toString();
-//}

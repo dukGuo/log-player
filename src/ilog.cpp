@@ -95,7 +95,7 @@ int ILog::find(SearchArg arg, Location loc, bool forward)
 
         //其他行
         if (forward) {
-            for (auto i = range.from+1; i <= range.to /*&& !op->isCanceled()*/; i++) {
+            for (auto i = range.from+1; i <= range.to; i++) {
                 ret = doSearch(i, 0);
                 if (ret.offset >= 0)
                     goto __return;

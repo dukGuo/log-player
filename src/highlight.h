@@ -8,9 +8,6 @@ struct HighlightPattern {
     QString key;
     bool caseSensitive{false};
     QColor color;
-
-    //QJsonObject saveToJson();
-    //void loadFromJson(QJsonObject o);
 };
 
 class Highlighter: public QSyntaxHighlighter
@@ -27,9 +24,6 @@ public:
 
     const QList<HighlightPattern> allQuickHighlights(){return mQuickHighLights.values();}
 
-public:
-   // QJsonObject saveToJson();
-   // void loadFromJson(QJsonObject o);
 
 signals:
     void onPatternAdded(HighlightPattern pattern);

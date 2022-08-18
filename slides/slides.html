@@ -212,6 +212,9 @@
       <img src="image/slides/backend.png" width="650px" style="margin: 0px;padding-left: 10px;" > 
       <p>
          界面通过FileSource提供的getLog()方法获取文本值
+         <blockquote>
+          之所以抽象出ILogSource,是为了后续支持从stdin(或其他源)处获取日志
+         </blockquote>
       </p>
     </ul>
     
@@ -338,7 +341,7 @@ private:
       <ul>
         <hr>
         <li>将与文件(标签页)相关的QAction统一管理</li>
-        <pre><code data-trim data-noescape data-line-numbers>
+        <pre><code data-trim data-noescape data-line-numbers><script type="text/template">
               // Controller.h
               QVector<QAction*> mDocActions;
               // DocumentTab.cpp
@@ -348,7 +351,8 @@ private:
                 disconnect(conn);
                 mConnections.clear();
               }
-        </code></pre>
+
+            </script></code></pre>
       </ul>
   </section>
   <section id="控制模块-cont" class="slide level2">
@@ -356,7 +360,7 @@ private:
     <ul>
     <hr>
     <li>对于每个文档搜索框与高亮标签也是独立的</li>
-    <pre><code data-trim data-line-numbers data-noescpe>
+    <pre><code data-trim data-line-numbers data-noescpe><script type="text/template">
               // 以高亮标签为例
               void DocumentTab::loadCurrentTaglist(LogEdit* editor)
               {
@@ -372,19 +376,208 @@ private:
                   disconnect(conn);
                 mConnections.clear();
               }
-            </code></pre>
+
+            </script></code></pre>
       </ul>
     </section>
   <section id="高亮子模块" class="slide level2">
     <h2>高亮子模块</h2>
+    <hr>
     <ul>
-      <li>高亮</li>
+      <li>通过继承QSyntaxHighlighter实现自定义高亮</li>
+      <li>一个标签页(文件)中的高亮可分为两类</li>
+      <ul>
+        <li><strong>搜索高亮 </strong>: 最多存在一个实例 + 颜色不可变 + 支持大小写/正则 + 变化时无需同步</li>
+        <pre><code><script type="text/template">    HighlightPattern mSearchHighLight;</script></code></pre>
+        <li><strong>普通高亮 </strong>: 存在实例数无上限 + 颜色可变 + 无需支持模式匹配 + 变化时应和Taglist同步</li>
+        <pre><code><script type="text/template">    QMap<QString, HighlightPattern> mQuickHighLights;</script></code></pre>
+      </ul>
     </ul>
   </section>
+    <section id="高亮子模块-cont" class="slide level2">
+      <h2>高亮子模块(con't)</h2>
+      <ul>
+        <li>重写 highlightBlock </li>
+          <pre><code data-line-numbers data-trim ><script type="text/template">
+void Highlighter::highlightBlock(const QString &text) {
+    bool searchHlApplied = false;
+    //选词高亮
+    for (auto p : mQuickHighLights) {
+        int i = 0;
+        auto len = p.key.length();
+        QTextCharFormat fmt;
+        fmt.setFontUnderline(true);
+        fmt.setForeground(Qt::white);
+        fmt.setBackground(p.color);
+        if (!searchHlApplied && p.key == mSearchHighLight.key) {
+            fmt.setFontUnderline(true);
+            searchHlApplied=true;
+        }
+        while ((i = text.indexOf(p.key, i, p.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive)) >= 0) {
+            setFormat(i, len, fmt);
+            i+=len;
+        }
+    }
+
+   //搜索高亮
+    if (mSearchHighLight.key.length() == 0 || searchHlApplied)
+        return;
+
+    auto len = mSearchHighLight.key.length();
+    QTextCharFormat fmt;
+    fmt.setFontUnderline(true);
+    fmt.setBackground(QColor(Qt::gray));
+    int i = 0;
+    while ((i = text.indexOf(mSearchHighLight.key, i, mSearchHighLight.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive)) >= 0) {
+        setFormat(i, len, fmt);
+        i+=len;
+    }
+}
+          </script></code></pre>
+          <p>当高亮发生改变时,通过rehighlight()对高亮进行更改</p>
+        </ul>
+      </ul>
+    </section>
   <section id="查询子模块" class="slide level2">
     <h2>查询子模块</h2>
     <ul>
-      <li>查询</li>
+      <hr>
+      <pre><code data-line-numbers="|10-61|,|13-34|,|57-62|" data-trim ><script type="text/template">
+int ILog::find(SearchArg arg, Location loc, bool forward)
+{
+    auto range = availRange();
+    if (forward) {
+        range.from = loc.line;
+    } else {
+        range.to = loc.line;
+    }
+
+    QThreadPool::globalInstance()->start([=]{
+
+        auto patternLen = arg.pattern.length();
+        auto doSearch = [=](int line, int pos) {
+            auto text = readLine(line);
+            auto caseSense = arg.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+            SearchResult ret;
+            ret.line = line;
+            ret.offset = -1;
+
+            if (arg.regex) {
+                QRegExp pattern(arg.pattern, caseSense);
+                ret.offset = forward ? text.indexOf(pattern, pos) : text.lastIndexOf(pattern, pos);
+                if (ret.offset >= 0) {
+                    ret.matchedText = pattern.cap();
+                }
+            } else {
+                ret.offset = forward ? text.indexOf(arg.pattern, pos, caseSense) : text.lastIndexOf(arg.pattern, pos, caseSense);
+                if (ret.offset >= 0) {
+                    ret.matchedText = text.mid(ret.offset, patternLen);
+                }
+            }
+
+            return ret;
+        };
+
+        //第一行特殊处理
+        auto ret = doSearch(loc.line, loc.offset);
+        if (ret.offset >= 0)
+            goto __return;
+
+        //其他行
+        if (forward) {
+            for (auto i = range.from+1; i <= range.to; i++) {
+                ret = doSearch(i, 0);
+                if (ret.offset >= 0)
+                    goto __return;
+            }
+        } else {
+            for (auto i = range.to - 1; i >= range.from /*&& !op->isCanceled()*/; i--) {
+                ret = doSearch(i, -1);
+                if (ret.offset >= 0)
+                    goto __return;
+            }
+        }
+
+__return:
+        post(new FindDoneEvent(shared_from_this(), ret));
+        // 在DocumentTab中处理和显示结果
+        // 执行操作: 
+        // 1. 滚动到当前行 
+        // 2. 选中当前词 
+        // 3. 如果搜索词改变,更新高亮类
+    });
+
+    return 0;
+}
+      </script></code></pre>
+      <ul>
+        <p> 查询词的搜索与高亮是彼此分离的</p>
+      </ul>
+    </ul>
+  </section>
+  <section id="过滤子模块" class="slide level2">
+    <h2>过滤子模块</h2>
+    <ul>
+      <li>过滤 = 创建子log (树结构) + 向子log填充 (map/reduce)</li>
+      <hr>
+      <pre><code data-line-numbers="|3-10|,|15-53|,|41-48|" data-trim><script type="text/template">
+int ILog::createChild(SearchArg arg, QString id)
+{
+    auto range = availRange();
+    auto chunkSize = 200000;
+    QVector<Range> taskRanges;
+    int offset = range.from;
+    while (offset + chunkSize <= range.to) {
+        taskRanges.push_back({offset, offset+chunkSize-1});
+        offset+=chunkSize;
+    }
+    if (offset+chunkSize > range.to) {
+        taskRanges.push_back({offset, range.to});
+    }
+
+    QtConcurrent::run([this, arg, taskRanges, range, id]{
+        shared_ptr<SubLog> sub(new SubLog(shared_from_this(), arg));
+        sub->mSource = mSource;
+        sub->setId(id);
+        mChildren.push_back(sub);
+
+        function<QVector<int>(const Range&)> mapFunc = [this, arg](const Range& r){
+            auto revert = arg.revert;
+            auto caseSense = arg.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive;
+            QRegExp pattern(arg.pattern, caseSense);
+            QVector<int> ret;
+            ret.reserve(r.size());
+            QString line;
+
+            for (int i = r.from; i <= r.to ; i++) {
+                line.clear();
+                line.append(readLine(i));
+                auto match = arg.regex ? line.contains(pattern) : line.contains(arg.pattern, caseSense);
+                if (match ^ revert) {
+                    //match 0 revert 1 || match 1 revert 0
+                    ret.push_back(i);
+                }
+            }
+
+            return ret;
+        };
+        // map-reduce
+        auto rets = QtConcurrent::mapped(taskRanges, mapFunc);
+        
+        sub->mLineInParent.reserve(range.size());
+        for (auto i = 0; i < taskRanges.size() ; i++) {
+            auto ret = rets.resultAt(i);
+            sub->mLineInParent.append(ret);
+        }
+        sub->mLineInParent.shrink_to_fit();
+
+        post(new SubLogCreatedEvent(sub));
+        // 同样在DocumentTab中处理:为subLog创建标签等
+    });
+
+    return 0;
+}
+      </script></code></pre>
     </ul>
   </section>
   <section id="时间线子模块" class="slide level2">
@@ -420,203 +613,6 @@ private:
   </section>
 </section>
 
-<section id="环境" class="slide level2">
-<h2>环境</h2>
-<ul>
-<li>语言: C++</li>
-<li>Qt 5.15</li>
-</ul>
-</section>
-<section data-auto-animate id="后端" class="slide level2">
-<h2>后端</h2>
-<ul>
-<li>主要功能: 打开日志，读取并解析日志内容，输出给界面 img</li>
-</ul>
-<pre ><code class="hljs" data-trim> <script type="text/template">
-#ifndef ILOGSOURCE_H
-#define ILOGSOURCE_H
-#include <QObject>
-#include <QApplication>
-#include <QMutex>
-#include <QWaitCondition>
-#include <QMutexLocker>
-#include <QJsonObject>
-#include <QTextCodec>
-#include <memory>
-#include "event.h"
-
-//#include "longtimeoperation.h"
-
-
-class ILog;
-class ILogSource: public std::enable_shared_from_this<ILogSource>
-{
-public:
-    ILogSource(QObject* eventHandler, QString type)
-        :mEventHandler(eventHandler), mType(type){
-        setCodec("UTF-8");
-    }
-
-    virtual ~ILogSource(){}
-
-    virtual bool open() = 0;
-    // virtual void pause() {
-    //     QMutexLocker l(&mCtrlMutex);
-    //     mPaused = true;
-    // }
-    // virtual void resume() {
-    //     QMutexLocker l(&mCtrlMutex);
-    //     mPaused = false;
-    //     qDebug()<<"notify";
-    //     mCtrlCond.notify_one();
-    // };
-    virtual void close() = 0;
-
-    virtual std::shared_ptr<ILog> getLog() = 0;
-
-//    virtual shared_ptr<LongtimeOperation> getLoadProgress(){
-//        return mLoadOp;
-//    }
-
-    virtual bool setCodec(QString name) {
-        mCodec = QTextCodec::codecForName(name.toStdString().c_str());
-        return true;
-    }
-
-    QTextCodec* getCodec() {
-        this->x;
-        return mCodec;
-    }
-
-    static ILogSource *createLogSourceFromType(QString type, QObject* eventHandler);
-
-    virtual QString getSimpleDesc() = 0;
-
-//    bool isPaused(){return mPaused;}
-
-//    bool isFinished(){return mFinished;}
-
-//public:
-    //virtual QJsonValue saveToJson();
-    //virtual void loadFromJson(const QJsonValue &jo);
-
-public:
-    void post(BaseEvent* ev) {
-        // QMutexLocker l(&mCtrlMutex);
-        if ( (EventsType)ev->type() == evLogChange) {
-            qDebug()<<"wait";
-        //    mCtrlCond.wait(&mCtrlMutex);
-        }
-
-        // if ((EventsType)ev->type() == evSourceFinish) {
-        //     mFinished = true;
-        // }
-
-        qApp->postEvent(mEventHandler, ev);
-    }
-
-
-protected:
-    //shared_ptr<LongtimeOperation> mLoadOp;
-    QTextCodec* mCodec;
-
-private:
-    QObject* mEventHandler;
-    // QMutex mCtrlMutex;
-    // QWaitCondition mCtrlCond;
-    // bool mPaused{false};
-    // bool mFinished{false};
-    QString mType;
-};
-
-#endif // ILOGSOURCE_H
-
-    </script></code></pre>
-    <p> 解释评论等</p>
-</section>
-<section id="后端-contd" class="slide level2">
-<h2>后端 (cont’d)</h2>
-<ul>
-<li>文件读取方式 mmp 代替 read</li>
-</ul>
-          <pre data-id="code-animation"><code class="hljs" data-trim data-line-numbers="|4,8-11|17|22-24"><script type="text/template">
-          						import React, { useState } from 'react';
-          
-          						function Example() {
-          						  const [count, setCount] = useState(0);
-          
-          						  return (
-          						    <div>
-          						      <p>You clicked {count} times</p>
-          						      <button onClick={() => setCount(count + 1)}>
-          						        Click me
-          						      </button>
-          						    </div>
-          						  );
-          						}
-          
-          						function SecondExample() {
-          						  const [count, setCount] = useState(0);
-          
-          						  return (
-          						    <div>
-          						      <p>You clicked {count} times</p>
-          						      <button onClick={() => setCount(count + 1)}>
-          						        Click me
-          						      </button>
-          						    </div>
-          						  );
-          						}
-          					</script></code></pre>
-</section>
-<section id="控制模块" class="slide level2">
-<h2>控制模块</h2>
-<ul>
-<li>主要功能: 连接界面和控制部分</li>
-</ul>
-</section>
-<section id="高亮子模块" class="slide level2">
-<h2>高亮子模块</h2>
-<ul>
-<li>高亮</li>
-</ul>
-</section>
-<section id="查询子模块" class="slide level2">
-<h2>查询子模块</h2>
-<ul>
-<li>查询</li>
-</ul>
-</section>
-<section id="时间线子模块" class="slide level2">
-<h2>时间线子模块</h2>
-<ul>
-<li>时间线</li>
-</ul>
-</section>
-<section id="其他子模块" class="slide level2">
-<h2>其他子模块</h2>
-<ul>
-<li>搜索框</li>
-<li>Tag框</li>
-<li>分割</li>
-</ul>
-</section>
-<section id="核心documenttab" class="slide level2">
-<h2>核心:DocumentTab</h2>
-<p>切换连接 深度搜索</p>
-</section></section>
-<section>
-<section id="实习感想" class="title-slide slide level1">
-<h1>实习感想</h1>
-
-</section>
-<section id="实习感想-1" class="slide level2">
-<h2>实习感想</h2>
-<ul>
-<li><p>Qt</p></li>
-<li><p>实践</p></li>
-</ul>
-</section></section>
     </div>
   </div>
 
