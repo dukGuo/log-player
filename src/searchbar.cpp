@@ -45,7 +45,7 @@ QComboBox *SearchBar::buildKeywordCombo()
     auto edit = new QComboBox;
     edit->setEditable(true);
     edit->setCompleter(completer);
-    //connect(edit, QOverload<int>::of(&QComboBox::activated), this, &SearchBar::buildSearchRequest);
+    connect(edit, QOverload<int>::of(&QComboBox::activated), this, &SearchBar::buildSearchRequest);
 
     return edit;
 }
@@ -79,13 +79,7 @@ void SearchBar::fill(const QString &keyword)
 void SearchBar::setSearchForward(bool searchForward)
 {
     mSearchForward = searchForward;
-//     if (searchForward) {
-//         mForwardBtn->setIcon(QIcon(":/res/img/enter_down.png"));
-//         mBackwardBtn->setIcon(QIcon(":/res/img/up.png"));
-//     } else {
-//         mForwardBtn->setIcon(QIcon(":/res/img/down.png"));
-//         mBackwardBtn->setIcon(QIcon(":/res/img/enter_up.png"));
-//     }
+
 }
 
 void SearchBar::strongFocus()

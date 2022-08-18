@@ -10,7 +10,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
 
   <link rel="stylesheet" href="dist/base.css">
-  <link rel="stylesheet" href="/dist/tailwind.min.css">
     <style>
       .font-sans {
         font-family: 'Lato', 'SimHei', 'STHeiti', 'SimHei', 'Serif';
@@ -225,7 +224,7 @@
     <ul>
       <li>文件读取方式: <strong>open+read</strong> 代替<strong> open+mmap</strong></li>
     </ul>
-    <pre><code data-trim data-line-numbers="|8|">
+    <pre class="cpp"><code data-trim data-line-numbers="|8|">
             <script type="text/template">
               bool FileSource::open()
                 {
@@ -257,7 +256,7 @@
     <h2>控制模块</h2>
     <ul>
       <li>Controller.h</li>
-      <pre><code data-trim data-line-numbers="|4-21|,|23,24,27,28|">
+      <pre class="cpp"><code data-trim data-line-numbers="|4-21|,|23,24,27,28|">
         <script type="text/template">
 class Controller
 {
@@ -341,7 +340,7 @@ private:
       <ul>
         <hr>
         <li>将与文件(标签页)相关的QAction统一管理</li>
-        <pre><code data-trim data-noescape data-line-numbers><script type="text/template">
+        <pre class="cpp"><code data-trim data-noescape data-line-numbers><script type="text/template">
               // Controller.h
               QVector<QAction*> mDocActions;
               // DocumentTab.cpp
@@ -360,7 +359,7 @@ private:
     <ul>
     <hr>
     <li>对于每个文档搜索框与高亮标签也是独立的</li>
-    <pre><code data-trim data-line-numbers data-noescpe><script type="text/template">
+    <pre class="cpp"><code data-trim data-line-numbers data-noescpe><script type="text/template">
               // 以高亮标签为例
               void DocumentTab::loadCurrentTaglist(LogEdit* editor)
               {
@@ -388,51 +387,50 @@ private:
       <li>一个标签页(文件)中的高亮可分为两类</li>
       <ul>
         <li><strong>搜索高亮 </strong>: 最多存在一个实例 + 颜色不可变 + 支持大小写/正则 + 变化时无需同步</li>
-        <pre><code><script type="text/template">    HighlightPattern mSearchHighLight;</script></code></pre>
+        <pre class="cpp"><code><script type="text/template">    HighlightPattern mSearchHighLight;</script></code></pre>
         <li><strong>普通高亮 </strong>: 存在实例数无上限 + 颜色可变 + 无需支持模式匹配 + 变化时应和Taglist同步</li>
-        <pre><code><script type="text/template">    QMap<QString, HighlightPattern> mQuickHighLights;</script></code></pre>
+        <pre class="cpp"><code><script type="text/template">    QMap<QString, HighlightPattern> mQuickHighLights;</script></code></pre>
       </ul>
     </ul>
   </section>
     <section id="高亮子模块-cont" class="slide level2">
-      <h2>高亮子模块(con't)</h2>
+      <h2>高亮子模块(cont'd)</h2>
       <ul>
         <li>重写 highlightBlock </li>
-          <pre><code data-line-numbers data-trim ><script type="text/template">
-void Highlighter::highlightBlock(const QString &text) {
-    bool searchHlApplied = false;
-    //选词高亮
-    for (auto p : mQuickHighLights) {
-        int i = 0;
-        auto len = p.key.length();
-        QTextCharFormat fmt;
-        fmt.setFontUnderline(true);
-        fmt.setForeground(Qt::white);
-        fmt.setBackground(p.color);
-        if (!searchHlApplied && p.key == mSearchHighLight.key) {
-            fmt.setFontUnderline(true);
-            searchHlApplied=true;
-        }
-        while ((i = text.indexOf(p.key, i, p.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive)) >= 0) {
-            setFormat(i, len, fmt);
-            i+=len;
-        }
-    }
+          <pre class="cpp"><code data-line-numbers data-trim ><script type="text/template">
+          void Highlighter::highlightBlock(const QString &text) {
+              bool searchHlApplied = false;
+              //选词高亮
+              for (auto p : mQuickHighLights) {
+                  int i = 0;
+                  auto len = p.key.length();
+                  QTextCharFormat fmt;
+                  fmt.setFontUnderline(true);
+                  fmt.setForeground(Qt::white);
+                  fmt.setBackground(p.color);
+                  if (!searchHlApplied && p.key == mSearchHighLight.key) {
+                      fmt.setFontUnderline(true);
+                      searchHlApplied=true;
+                  }
+                  while ((i = text.indexOf(p.key, i, p.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive)) >= 0) {
+                      setFormat(i, len, fmt);
+                      i+=len;
+                  }
+              }
 
-   //搜索高亮
-    if (mSearchHighLight.key.length() == 0 || searchHlApplied)
-        return;
-
-    auto len = mSearchHighLight.key.length();
-    QTextCharFormat fmt;
-    fmt.setFontUnderline(true);
-    fmt.setBackground(QColor(Qt::gray));
-    int i = 0;
-    while ((i = text.indexOf(mSearchHighLight.key, i, mSearchHighLight.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive)) >= 0) {
-        setFormat(i, len, fmt);
-        i+=len;
-    }
-}
+            //搜索高亮
+              if (mSearchHighLight.key.length() == 0 || searchHlApplied)
+                  return;
+              auto len = mSearchHighLight.key.length();
+              QTextCharFormat fmt;
+              fmt.setFontUnderline(true);
+              fmt.setBackground(QColor(Qt::gray));
+              int i = 0;
+              while ((i = text.indexOf(mSearchHighLight.key, i, mSearchHighLight.caseSensitive ? Qt::CaseSensitive : Qt::CaseInsensitive)) >= 0) {
+                  setFormat(i, len, fmt);
+                  i+=len;
+              }
+          }
           </script></code></pre>
           <p>当高亮发生改变时,通过rehighlight()对高亮进行更改</p>
         </ul>
@@ -442,7 +440,7 @@ void Highlighter::highlightBlock(const QString &text) {
     <h2>查询子模块</h2>
     <ul>
       <hr>
-      <pre><code data-line-numbers="|10-61|,|13-34|,|57-62|" data-trim ><script type="text/template">
+      <pre class="cpp"><code data-line-numbers="|10-61|,|13-34|,|57-62|" data-trim ><script type="text/template">
 int ILog::find(SearchArg arg, Location loc, bool forward)
 {
     auto range = availRange();
@@ -520,7 +518,7 @@ __return:
     <ul>
       <li>过滤 = 创建子log (树结构) + 向子log填充 (map/reduce)</li>
       <hr>
-      <pre><code data-line-numbers="|3-10|,|15-53|,|41-48|" data-trim><script type="text/template">
+      <pre class="cpp"><code data-line-numbers="|3-10|,|15-53|,|41-48|" data-trim><script type="text/template">
 int ILog::createChild(SearchArg arg, QString id)
 {
     auto range = availRange();
@@ -580,18 +578,99 @@ int ILog::createChild(SearchArg arg, QString id)
       </script></code></pre>
     </ul>
   </section>
+  <section id="过滤子模块-contd" class="slide level2">
+  <h2>过滤子模块(cont'd)</h2>
+  <ul>
+    <li>为子log创建页面</li>
+    <pre class="cpp"><code data-trim  data-line-numbers><script type="text/template">
+    void DocumentTab::onSubLogCreated(shared_ptr<SubLog> subLog)
+    {
+        if (!subLog->availRange().isValid()) {
+          if (QMessageBox::Ok != QMessageBox::warning(this, "查找结果", "没有匹配的文本", QMessageBox::Ok)) {
+            return;
+          }
+        }
+      
+        auto viewer = new LogViewer(&mFocusManager);
+      
+        auto subEdit = viewer->getEdit();
+      
+        bindEditor(subEdit,true);
+        QString revert = subLog->getSearchArg().revert? "_revert" : "";
+      
+        appendSubLog(viewer, subLog->getSearchArg().pattern+revert);
+      
+        subEdit->setLog(subLog);
+      }
+    </script></code></pre>
+    <blockquote>新建的sub Tab在逻辑地位上等同于主页面</blockquote>
+  </ul>
+  </section>
   <section id="时间线子模块" class="slide level2">
     <h2>时间线子模块</h2>
+    <hr>
     <ul>
-      <li>时间线</li>
+      <li>时间线通过<strong>QGraphics</strong>实现,主体为TimeLine + List &lt;TimeNode &gt; </li>
+      <li>TimeNode = TimeHead + TimeBody</li>
+        <ul>
+          <li><strong>TimeHead</strong>用来显示节点位置及时间信息</li>
+          <li><strong>TimeBody</strong>用来显示TimeNode的日志内容</li>
+          <img width="600px" src="image/slides/timeline1.png">
+        </ul>
     </ul>
+
   </section>
+    <section id="时间线子模块contd" class="slide level2">
+      <h2>时间线子模块(cont'd)</h2>
+      <ul>
+        <li>快捷跳转</li>
+        <ul>
+          <li>重写TimeNode双击与TimeLine键盘事件</li>
+          <li>从根节点开始先序遍历,对每个log都进行跳转</li>
+        </ul>
+      </ul>
+      <pre class="cpp"><code data-line-numbers data-trim><script type="text/template">  
+void DocumentTab::onLineEmphasized(shared_ptr<ILog> who, int line, bool isSource)
+{
+    auto rootLine = who->toRootLine(line);
+    auto root = who->rootLog();
+
+    //从上到下，触发emphasize
+    deepEmphasizeLine(root, rootLine, isSource ? who : shared_ptr<ILog>());
+}
+
+void DocumentTab::deepEmphasizeLine(const shared_ptr<ILog> &log, int line, const shared_ptr<ILog> &source)
+{
+    //高亮自己
+    if (log != source) {//只在非源的log上刷新。否则会出现双击某个文本框时，自己这个文本框的高亮行跳到了第一行位置
+        auto edit = findLogEditByLog(log);
+        if (edit)
+            edit->onLogEmphasized(line);
+    }
+
+    //高亮子节点
+    auto children = log->children();
+    for (auto&& child : children) {
+        deepEmphasizeLine(child, child->fromParentLine(line), source);
+    }
+}
+
+      </script></code></pre>  
+    
+    </section>
   <section id="其他子模块" class="slide level2">
     <h2>其他子模块</h2>
     <ul>
+      <li>工具栏</li>
+      <ul>
       <li>搜索框</li>
+        <p>QComboBox + btn * 2</p>
       <li>Tag框</li>
-      <li>分割</li>
+        <p>QListWidget: 高亮词-色彩对</p>
+      </ul>
+      <p>工具栏只实例化一个,根据不同的Tab装载数据</p>
+      <li>文件分割</li>
+      <p>从起始行开始遍历LogSource的数据,逐行写入</p>
     </ul>
   </section>
   <section id="核心documenttab" class="slide level2">
@@ -619,10 +698,7 @@ int ILog::createChild(SearchArg arg, QString id)
 
 
   <!-- reveal.js plugins -->
-<script src="dist/reveal.js"></script>
-		<script src="plugin/zoom/zoom.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/search/search.js"></script>
+````<script src="dist/reveal.js"></script>
 		<script src="plugin/markdown/markdown.js"></script>
   <link rel="stylesheet" href="plugin/highlight/style.css">
   <script src="plugin/highlight/highlight.js"></script>
@@ -782,7 +858,7 @@ int ILog::createChild(SearchArg arg, QString id)
       Reveal.initialize({
 
           width: 1024, height: 768,
-          plugins: [RevealZoom, RevealNotes, RevealSearch, RevealMarkdown, RevealHighlight],
+          plugins: [ RevealMarkdown, RevealHighlight],
           slideNumber: 'c/t',
           controlsTutorial: false,
           progress: false,
@@ -796,9 +872,6 @@ int ILog::createChild(SearchArg arg, QString id)
             { src: 'plugin/markdown/marked.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
             { src: 'plugin/markdown/markdown.js', condition: function () { return !!document.querySelector('[data-markdown]'); } },
             { src: 'plugin/highlight/highlight.js', async: true },
-            { src: 'plugin/search/search.js', async: true },
-            { src: 'plugin/zoom-js/zoom.js', async: true },
-            { src: 'plugin/notes/notes.js', async: true },
           ]
         });
     </script>

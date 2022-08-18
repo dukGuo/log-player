@@ -17,10 +17,6 @@ LogViewer::LogViewer(FocusManager* focusManager)
     //mLogEdit->setPlainText(QString("test in LogViewer"));
     auto layout = new QHBoxLayout;
     layout->addWidget(mLogEdit);
-//    auto box = new QGridLayout();
-//    box->addWidget(vbar,0,0,Qt::AlignHCenter);
-//    //box->addWidget(buildSwitchModeButton(),1,0,Qt::AlignCenter);
-//    box->setRowStretch(0,1);
     layout->addWidget(vbar);
 
     layout->setSpacing(0);

@@ -36,23 +36,7 @@ TimeLine::TimeLine(QWidget* parent)
     mCurrentNodeIdx = -1;
 }
 
-// void TimeLine::highlightNode(int lineNum)
-// {
-//     TimeNode* node = nullptr;
-//     int idx = -1
-//     for (int i = 0; i < mNodes.size(); i++) {
-//         if (lineNum == mNodes.at(i)->lineNumber()) {
-//             node = mNodes.at(i);
-//             idx = i;
-//             break;
-//         }
-//     }
 
-//     if (node) {
-//         mCurrentNode = i;
-//         highlightItem(node);
-//     }
-// }
 void TimeLine::keyPressEvent(QKeyEvent *event)
 {
     auto key = event->key();
@@ -86,24 +70,7 @@ void TimeLine::keyPressEvent(QKeyEvent *event)
             qDebug()<< "key: some key"<< mCurrentNodeIdx;
     }
 }
-//QJsonValue TimeLine::saveToJson()
-//{
-//    QJsonArray arr;
-//    for (auto& node : mNodes) {
-//        arr.push_back(node->saveToJson());
-//    }
-//    return arr;
-//}
 
-//void TimeLine::loadFromJson(const QJsonValue &jo)
-//{
-//    if (!jo.isArray())
-//        return;
-
-//    for (auto item : jo.toArray()) {
-//        addNode(new TimeNode(item));
-//    }
-//}
 
 void TimeLine::addNode(int lineNum, const QString &text, const QString time) {
     //找到插入位置
@@ -153,13 +120,6 @@ void TimeLine::exportToImage(const QString& path)
     });
 }
 
-// void TimeLine::exportToClipboard()
-// {
-//     withExportedImage([](QImage& img){
-//         QApplication::clipboard()->setImage(img);
-//         QMessageBox::information(nullptr, "复制时间线", "时间线已复制到剪贴板");
-//     });
-// }
 
 void TimeLine::clear()
 {
@@ -197,22 +157,6 @@ void TimeLine::updateCurrentNode(TimeNode *node)
     }
 }
 
-// void TimeLine::addNode(TimeNode *node)
-// {
-//     auto pos = mNodes.size();
-//     mNodes.insert(pos, node);
-
-//     fitLine();
-
-//     node->setX(MARGIN_LEFT);
-//     node->setY(calNodeY(pos));
-
-//     scene()->addItem(node);
-//     node->ensureVisible(0,0,10,10);
-
-//     connect(node, SIGNAL(requestDel(TimeNode*)), this, SLOT(deleteNode(TimeNode*)));
-//     connect(node, SIGNAL(selected(TimeNode*)), this, SIGNAL(nodeSelected(TimeNode*)));
-// }
 
 int TimeLine::calNodeY(int index)
 {
@@ -250,15 +194,6 @@ void TimeLine::withExportedImage(std::function<void (QImage &)> handler)
     painter.setPen(Qt::gray);
     painter.drawRect(borderRect);
 
-    // auto metrics = painter.fontMetrics();
-    // QString author("created by loginsight");
-
-    // QString site("http://www.loginsight.top");
-    // auto width = metrics.horizontalAdvance(site);
-    // auto x = img.width() - width - 2*borderMargin;
-    // auto y = img.height() - metrics.height() - 2*borderMargin;
-    // painter.drawText(x, y, author);
-    // painter.drawText(x, y+metrics.height(), site);
 
     handler(img);
 }

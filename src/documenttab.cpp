@@ -667,7 +667,6 @@ void DocumentTab::customEvent(QEvent *ev)
         break;
     }
     case evSubLogCreated:{
-        qDebug() << "recive Sub Create :" << ev;
         auto e = (SubLogCreatedEvent*)ev;
         onSubLogCreated(e->log);
         ev->accept();
@@ -691,25 +690,12 @@ void DocumentTab::customEvent(QEvent *ev)
         ev->accept();
         break;
     }
-    // case evSourceReady: {
-    //     ev->accept();
-    //     break;
-    // }
-    // case evSourceFinish:{
-    //     //Controller::instance().actionFor(Controller::PauseSource)->setEnabled(false);
-    //     ev->accept();
-    //     break;
-    // }
+
     default:
         ev->ignore();
         break;
     }
 
-//    if (mLoadingPharse) {
-//        if (!mLoadingPharse->process(ev)) {
-//            mLoadingPharse.reset();
-//        }
-//    }
 }
 
 void DocumentTab::find(SearchArg arg, bool forward)
@@ -795,11 +781,6 @@ void DocumentTab::onLineEmphasized(shared_ptr<ILog> who, int line, bool isSource
 {
     auto rootLine = who->toRootLine(line);
     auto root = who->rootLog();
-
-    // if (!root->availRange().contains(rootLine) || rootLine <= 0) {
-    //     QMessageBox::warning(this, "跳转错误", "无法跳转到对应行，可能日志已经被刷掉了");
-    //     return ;
-    // }
 
     //从上到下，触发emphasize
     deepEmphasizeLine(root, rootLine, isSource ? who : shared_ptr<ILog>());

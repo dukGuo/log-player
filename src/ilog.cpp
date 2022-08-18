@@ -171,9 +171,8 @@ int ILog::createChild(SearchArg arg, QString id)
             sub->mLineInParent.append(ret);
         }
         sub->mLineInParent.shrink_to_fit();
-
-        qDebug()<< "Emit Sub Create";
         post(new SubLogCreatedEvent(sub));
+        
     });
 
     return 0;
