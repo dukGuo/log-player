@@ -8,7 +8,7 @@
 #include <memory>
 #include <QJsonValue>
 #include <QJsonObject>
-//#include "ilog.h"
+
 
 struct Location {
     int line{0};
@@ -60,23 +60,6 @@ struct SearchArg {
     bool caseSensitive{false};
     QString pattern;
     bool revert{false};
-
-    // QJsonObject saveToJson()
-    // {
-    //     QJsonObject o;
-    //     o["regex"] = regex;
-    //     o["caseSensitive"] = caseSensitive;
-    //     o["pattern"] = pattern;
-    //     o["revert"] = revert;
-    //     return o;
-    // }
-    // void loadFromJson(QJsonObject o)
-    // {
-    //     regex = o["regex"].toBool();
-    //     caseSensitive = o["caseSensitive"].toBool();
-    //     pattern = o["pattern"].toString();
-    //     revert = o["revert"].toBool();
-    // }
 
 };
 

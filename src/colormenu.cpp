@@ -1,5 +1,5 @@
-#include "colormenu.h"
 #include <QColorDialog>
+#include "colormenu.h"
 
 ColorMenu::ColorMenu(const QList<std::pair<QString,QColor>>& preset)
 {

@@ -40,7 +40,6 @@ public:
         return mCodec;
     }
 
-    // static ILogSource *createLogSourceFromType(QString type, QObject* eventHandler);
 
      virtual QString getSimpleDesc() = 0;
 

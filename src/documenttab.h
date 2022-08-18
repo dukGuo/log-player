@@ -28,7 +28,7 @@ public:
     void unBindController();
     LogEdit* currentEdit();
     void bindEditor(LogEdit* edit,bool isSub = false);
-    //DocumentTab* currentDoc();
+    
 
 private:
     void doFilter(SearchArg arg);
@@ -37,7 +37,6 @@ private:
     void onLogChange(std::shared_ptr<ILog> who, EventAction update);
     LogEdit* findLogEditByLog(const std::shared_ptr<ILog>& log);
     void deepHandleLogChange(const std::shared_ptr<ILog>&log, Range before, Range after);
-   //void modalLongOp(shared_ptr<LongtimeOperation> op, QString hint);
     void deepEmphasizeLine(const std::shared_ptr<ILog>& log, int line, const std::shared_ptr<ILog>& source);
     void onSubLogCreated(std::shared_ptr<SubLog> subLog);
     void onFindDone(std::shared_ptr<ILog> who, SearchResult ret);
@@ -46,7 +45,6 @@ private:
     void loadCurrentTaglist(LogEdit* editor);
     QString searchTime(int sourceLine,LogEdit* edit);
 
-    //void connectAction(Controller::ActionType type,DocumentTab* tab,);
 
 protected:
     void customEvent(QEvent* ev) override;

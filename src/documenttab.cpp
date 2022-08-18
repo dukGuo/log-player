@@ -42,9 +42,6 @@ DocumentTab::DocumentTab()
             qDebug()<< "doc focus changed";
 
             loadCurrentTaglist(currentEdit());;
-//            loadTagListWithCurrentLogEdit(currentLogEdit());
-//            // 操作过后更新操作历史<前进>\<后退>
-//            updateHistoryBtn(currentLogEdit());
 
         });
     mLogViewer = new LogViewer(&mFocusManager);
@@ -57,10 +54,6 @@ DocumentTab::DocumentTab()
     mSubLogTabWidget->hide();
     connect(mSubLogTabWidget, &QTabWidget::tabCloseRequested, this, &DocumentTab::closeSubLog);
     
-//    auto tab = new LogViewer(&mFocusManager);
-//    auto index = mSubLogTabWidget->addTab(tab,"sub test");
-//    mSubLogTabWidget->setCurrentIndex(index);
-
     mLogSplitter->setStretchFactor(0, 2);
     mLogSplitter->setStretchFactor(1, 1);
 
@@ -81,7 +74,6 @@ DocumentTab::DocumentTab()
     box->addWidget(hsplitter);
     box->setMargin(0);
     setLayout(box);
-    //bindController();
 
 }
 
@@ -92,19 +84,7 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
         auto tagList = Controller::instance().tagList();
         tagList->addTag(p.key,p.color);
     });
-    // connect(edit, &LogEdit::addToTimeLineRequested, [this, edit](int lineNum){
-    //     auto log = edit->getLog();
 
-    //     auto sourceLine = log->toRootLine(lineNum);
-    //     auto text = log->readLine(sourceLine);
-    //     auto time = searchTime(sourceLine,edit);
-    //     qDebug()<<"time:"<< time;
-    //     if(!time.isEmpty()){
-    //         auto len = text.size();
-    //         text = text.right(len-25);
-    //     }
-    //     mTimeLine->addNode(sourceLine, text,time);
-    // });
     connect(edit, &LogEdit::menuRequested,
             [this, edit,isSub](QPoint point, const QString& cursorWord, int lineNum){
         auto menu = new QMenu;
@@ -118,9 +98,6 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
 
             qDebug()<<"time:"<< time;
 
-            auto contentRx =  Controller::instance().getContent();
-            //auto len = text.size();
-            //text = text.right(len-25);
             text.indexOf(contentRx);
             if(contentRx.capturedTexts()[0].isEmpty()){
                text = contentRx.capturedTexts()[0];
@@ -476,10 +453,7 @@ void DocumentTab::splitFile()
         }
         qDebug()<<"input range" <<startInput->value()<<" "<<endInput->value();
     }
-//    if (ok) {
-//        qDebug()<< "Locate :"<< lineNum;
-//        edit->scrollToLine(lineNum);
-//    }
+
     auto savepath = QFileDialog::getSaveFileName(this, "Spilt file", QString(), "*.log");
     if (savepath.isEmpty())
         return;
@@ -500,9 +474,7 @@ void DocumentTab::splitFile()
             auto text = log->readLine(line);
             splitted.write(text.toStdString().c_str());
         }
-    //    splitted.write("[this file is splitted from: ");
-    //    splitted.write(mName.toStdString().c_str());
-
+   
         splitted.close();
         emit fileSplitted(savepath);
     });
@@ -705,7 +677,6 @@ void DocumentTab::find(SearchArg arg, bool forward)
     qDebug()<<"find:"<< arg.pattern<<" "<< logEdit->documentTitle();
     logEdit->find(arg, forward);
     
-    //modalLongOp(op, "查找中……可能需要较长时间");
 }
 
 void DocumentTab::appendSubLog(LogViewer* logViewer, const QString& hint)
@@ -830,8 +801,6 @@ QString DocumentTab::searchTime(int sourceLine,LogEdit* edit){
         time = "\n"+time;
     }
 
-
-    //time=QString( "\n2022-07-25\n15:59:33.018");
     return time;
 }
 

@@ -14,7 +14,7 @@ LogViewer::LogViewer(FocusManager* focusManager)
     auto vbar = new QScrollBar;
     mLogEdit = new LogEdit(focusManager);
     mLogEdit->setExternalVScrollbar(vbar);
-    //mLogEdit->setPlainText(QString("test in LogViewer"));
+
     auto layout = new QHBoxLayout;
     layout->addWidget(mLogEdit);
     layout->addWidget(vbar);

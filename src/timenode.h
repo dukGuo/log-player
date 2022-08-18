@@ -15,13 +15,9 @@ class TimeNode: public QGraphicsObject
     Q_INTERFACES(QGraphicsItem)
 public:
     TimeNode(int lineNum, const QString& locateText, const QString& detailText, const QString& memo = "Note:");
-    //TimeNode(const QJsonValue& jo);
-
 public:
-    //QJsonValue saveToJson();
-    //void setVisible();
+
     void updateHighlight(bool seleced){
-        //mHlRect->setVisible(seleced);
         setSelected(seleced);
     }
     void emitSelect(){
@@ -44,7 +40,7 @@ signals:
     void selected(TimeNode* node);
 private slots:
     void handleDelActionTriggered();
-    //void setColor(QColor color);
+
 
 private:
     QGraphicsRectItem* mHlRect;
@@ -52,7 +48,6 @@ private:
     int mLineNum;
     QColor mColor{Qt::blue};
     TimeNodeBody* mBody;
-    //QJsonObject mProjectData;
 };
 
 

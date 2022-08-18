@@ -1,6 +1,6 @@
-#include "FocusManager.h"
 #include <QDebug>
 #include <QApplication>
+#include "FocusManager.h"
 
 FocusManager::FocusManager() {
     mConnectId = connect(qApp, &QApplication::focusChanged, [this](QWidget*, QWidget* now){

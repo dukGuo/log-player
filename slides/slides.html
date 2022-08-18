@@ -73,12 +73,12 @@
     <ul>
       <li>初始化页 </li>
       <p>未打开文件时，显示初始化页</p>
-      <hr>
+   
       <li>主页面</li>
       <img  width="250px" data-src="image/slides/1660705878927.png" title="welcomePage"
         alt="welcomePage" style="position:absolute;top:120px ;left: 600px;"/>
 
-      <img width="690px" style="left:80px;margin-top: 0px;" data-src="image/slides/mainpage.png" e />
+      <img width="690px"  data-src="image/slides/mainpage.png" />
     </ul>
       
     
@@ -151,7 +151,7 @@
     <ul>
       <img class="float-right" src="image/slides/timeline.png" width="500px" style="margin: 40px 20px 20px 35px;">
       <hr>
-      <li>以行号为ID，时间为副ID，整行为内容
+      <li>以行号为ID,时间为副ID,整行为内容
         <ul>
           <li>更改时间/内容匹配模板</li>
           <p><strong>eg:&nbsp;</strong>&nbsp;\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]</p>
@@ -196,14 +196,35 @@
     <h1>模块设计与实现</h1>
 
   </section>
-  <section id="环境" class="slide level2">
-    <h2>环境</h2>
+  <section id="总体设计" class="slide level2">
+    <h2>总体设计</h2>
     <ul>
-      <hr>
-      <li>语言: C++</li>
-      <li>Qt 5.15</li>
+      <li>开发环境 : Qt 5.15</li>
+      <li>结构示意图</li>
+      <img  width="750px" src="image/slides/struct.png">
     </ul>
   </section>
+    <section id="核心documenttab" class="slide level2">
+      <h2>核心:DocumentTab</h2>
+      <hr>
+      <ul>
+        <li>向下读取日志数据</li>
+        <ul>
+          <li>主窗口从FileSource获取数据</li>
+          <li>子窗口从sublog获取数据</li>
+        </ul>
+        <li>向上接受控制信号</li>
+        <ul>
+          <li>来自Controller和MainWindow的菜单信号</li>
+          <li>来自内部Post的信号(customEvent处理)</li>
+        </ul>
+        <li>向用户提供操作接口</li>
+        <ul>
+          <li>查找/高亮/分割/跳转等操作</li>
+          <li>提供操作反馈:执行结果/执行失败原因等</li>
+        </ul>
+      </ul>
+    </section>
   <section id="后端" class="slide level2">
     <h2>后端</h2>
     <ul>
@@ -666,16 +687,12 @@ void DocumentTab::deepEmphasizeLine(const shared_ptr<ILog> &log, int line, const
       <li>搜索框</li>
         <p>QComboBox + btn * 2</p>
       <li>Tag框</li>
-        <p>QListWidget: 高亮词-色彩对</p>
+        <p>QListWidget: 高亮词-色彩 对</p>
       </ul>
       <p>工具栏只实例化一个,根据不同的Tab装载数据</p>
       <li>文件分割</li>
       <p>从起始行开始遍历LogSource的数据,逐行写入</p>
     </ul>
-  </section>
-  <section id="核心documenttab" class="slide level2">
-    <h2>核心:DocumentTab</h2>
-    <p>切换连接 深度搜索</p>
   </section>
 </section>
 <section>

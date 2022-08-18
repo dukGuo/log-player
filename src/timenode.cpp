@@ -25,7 +25,6 @@
 TimeNode::TimeNode(int lineNum, const QString &locateText, const QString &detailText, const QString& memo)
     :mLineNum(lineNum) {
     setFlag(GraphicsItemFlag::ItemIsSelectable);
-   // auto test = QString("text in timeline");
     auto head = new TimeNodeHead(this, locateText);
     head->setX(0);
     head->setY(0);
@@ -51,25 +50,7 @@ TimeNode::TimeNode(int lineNum, const QString &locateText, const QString &detail
     blur->setBlurRadius(4);
     mHlRect->setGraphicsEffect(blur);
 
-//    mProjectData["lineNum"] = lineNum;
-//    mProjectData["detail"] = detailText;
 }
-
-//TimeNode::TimeNode(const QJsonValue &jo)
-//    :TimeNode(jo["lineNum"].toInt(),
-//      QString("%1").arg(jo["lineNum"].toInt()),
-//      jo["detail"].toString(),
-//      jo["memo"].toString())
-//{
-//    setColor(jo["color"].toString());
-//}
-
-//QJsonValue TimeNode::saveToJson()
-//{
-//    mProjectData["memo"] = mBody->getMemo();
-//    mProjectData["color"] = mColor.name();
-//    return mProjectData;
-//}
 
 QRectF TimeNode::boundingRect() const
 {

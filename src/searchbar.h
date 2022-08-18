@@ -2,7 +2,6 @@
 #define SEARCHBAR_H
 #include "utils.h"
 #include <QWidget>
-//#include "ilog.h"
 #include <QComboBox>
 #include <QToolButton>
 #include <QCheckBox>

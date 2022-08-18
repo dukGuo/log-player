@@ -1,10 +1,9 @@
 #include <QThreadPool>
-#include "ilog.h"
 #include <QRegExp>
 #include <thread>
 #include <QDebug>
 #include <QtConcurrent>
-
+#include "ilog.h"
 #include "event.h"
 #include "ilogsource.h"
 #include "sublog.h"
@@ -172,7 +171,7 @@ int ILog::createChild(SearchArg arg, QString id)
         }
         sub->mLineInParent.shrink_to_fit();
         post(new SubLogCreatedEvent(sub));
-        
+
     });
 
     return 0;

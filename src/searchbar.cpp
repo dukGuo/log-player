@@ -1,10 +1,10 @@
-#include "searchbar.h"
-#include "utils.h"
 #include <QHBoxLayout>
 #include <QApplication>
 #include <QCompleter>
 #include <QLabel>
 #include <QSettings>
+#include "searchbar.h"
+#include "utils.h"
 
 SearchBar::SearchBar(QWidget *parent) : QWidget(parent)
 {
