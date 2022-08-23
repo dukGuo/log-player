@@ -12,6 +12,7 @@
 #include "FocusManager.h"
 #include "ilogsource.h"
 #include "controller.h"
+#include "timetrace.h"
 
 class DocumentTab
     : public QWidget
@@ -57,7 +58,7 @@ public slots:
     void revertFilter();
     void exportTimeLineToImage();
     void setPattern();
-
+    void addTimeTrace();
 private slots:
     void locateLine();
     void splitFile();
@@ -77,6 +78,7 @@ private:
     QString mName;
     LogViewer* mLogViewer;
     TimeLine* mTimeLine;
+    TimeTrace* mTimeTrace;
     FocusManager mFocusManager;
     std::shared_ptr<ILogSource> mLogSource;
     QVector<QMetaObject::Connection> mConnections;

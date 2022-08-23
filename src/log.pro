@@ -28,6 +28,7 @@ SOURCES += \
     taglistwidget.cpp \
     timeline.cpp \
     timenode.cpp \
+    timetrace.cpp \
     welcomepage.cpp
 
 HEADERS += \
@@ -50,6 +51,7 @@ HEADERS += \
     taglistwidget.h \
     timeline.h \
     timenode.h \
+    timetrace.h \
     utils.h \
     welcomepage.h
 

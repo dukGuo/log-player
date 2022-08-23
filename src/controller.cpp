@@ -13,6 +13,8 @@ Controller::Controller()
     setAction(SetPattern,QString("匹配模式"),QString("Ctrl+P"),true);
     setAction(SaveTimeLine,QString("导出时间线"),QString("Ctrl+Shift+S"),true);
     setAction(ClearTimeLine,QString("清除时间线"),QString("Ctrl+Shift+D"),true);
+    setAction(AddTimeTrace,QString("新建追踪线"),QString("Ctrl+K"),true);
+    setAction(ClearTimeTrace,QString("清空追踪线"),QString("Ctrl+Shift+K"),true);
     setAction(Find,QString("查找"),QString("Ctrl+F"),true);
     setAction(RevertFind,QString("反向查找"),QString("Ctrl+Shift+F"),true);
     setAction(FindNext,QString("下一个"),QString("Ctrl+N"),true);

@@ -10,7 +10,6 @@ class Controller
 
 public:
     enum ActionType{
-
         Filter,
         RevertFilter,
         OpenFile,
@@ -20,6 +19,8 @@ public:
         SetPattern,   
         SaveTimeLine,
         ClearTimeLine,
+        AddTimeTrace,
+        ClearTimeTrace,
         Find,
         RevertFind,     
         FindNext,

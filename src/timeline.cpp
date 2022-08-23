@@ -46,9 +46,10 @@ void TimeLine::keyPressEvent(QKeyEvent *event)
  
             if (mCurrentNodeIdx > 0){
                 mCurrentNodeIdx--;
-                mNodes.at(old)->updateHighlight(false);
-                mNodes.at(mCurrentNodeIdx)->updateHighlight(true);
+//                mNodes.at(old)->updateHighlight(false);
+//                mNodes.at(mCurrentNodeIdx)->updateHighlight(true);
                 mNodes.at(mCurrentNodeIdx)->emitSelect();
+                highlightItem(mNodes.at(mCurrentNodeIdx));
             }
             qDebug()<< "key: up_push"<<old<<"->"<<mCurrentNodeIdx;
             break;
@@ -58,9 +59,10 @@ void TimeLine::keyPressEvent(QKeyEvent *event)
             auto old = mCurrentNodeIdx;
             if (mCurrentNodeIdx < mNodes.size()-1){
                 mCurrentNodeIdx++;
-                mNodes.at(old)->updateHighlight(false);
-                mNodes.at(mCurrentNodeIdx)->updateHighlight(true);
+//                mNodes.at(old)->updateHighlight(false);
+//                mNodes.at(mCurrentNodeIdx)->updateHighlight(true);
                 mNodes.at(mCurrentNodeIdx)->emitSelect();
+                highlightItem(mNodes.at(mCurrentNodeIdx));
 
             }
             qDebug()<< "key: down_push"<<old<<"->"<<mCurrentNodeIdx;
@@ -129,6 +131,7 @@ void TimeLine::clear()
     mNodes.clear();
 
     hide();
+    emit lineEmpty(this);
 }
 
 void TimeLine::deleteNode(TimeNode *node)
@@ -142,10 +145,11 @@ void TimeLine::deleteNode(TimeNode *node)
 
     fitLine();
 
-    if (mNodes.isEmpty())
+    if (mNodes.isEmpty()){
         hide();
+        emit lineEmpty(this);
+    }
 }
-
 void TimeLine::updateCurrentNode(TimeNode *node)
 {
     if(node != nullptr){

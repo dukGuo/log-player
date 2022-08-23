@@ -74,6 +74,7 @@ DocumentTab::DocumentTab()
     box->addWidget(hsplitter);
     box->setMargin(0);
     setLayout(box);
+    mTimeTrace = new TimeTrace();
 
 }
 
@@ -89,6 +90,7 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
             [this, edit,isSub](QPoint point, const QString& cursorWord, int lineNum){
         auto menu = new QMenu;
         auto a = menu->addAction("添加到时间线");
+
         connect(a, &QAction::triggered, [this, edit, lineNum]{
             auto log = edit->getLog();
 
@@ -97,14 +99,47 @@ void DocumentTab::bindEditor(LogEdit* edit,bool isSub)
             auto time = searchTime(sourceLine,edit);
 
             qDebug()<<"time:"<< time;
-
+            auto contentRx = Controller::instance().getContent();
             text.indexOf(contentRx);
             if(contentRx.capturedTexts()[0].isEmpty()){
                text = contentRx.capturedTexts()[0];
             }
             mTimeLine->addNode(sourceLine, text,time);
         });
+        if (!(mTimeTrace->isEmpty())){
+            auto traceMenu = new QMenu("追踪线");
+            a = traceMenu->addAction("打开追踪线窗口");
+            connect(a,&QAction::triggered,[this]{mTimeTrace->show();});
+            for(int i = 0; i < mTimeTrace->size();i++){
+                auto name = mTimeTrace->getName(i);
+                if (name == "Trace"){
+                    auto hint = "添加到追踪线 "+to_string(i);
+                    a = traceMenu->addAction(hint.c_str());
+                }
+                else{
+                    auto hint = "添加到追踪线 "+name;
+                    a = traceMenu->addAction(hint.toStdString().c_str());
+                }
+                connect(a, &QAction::triggered, [this,i, edit, lineNum]{
+                    auto log = edit->getLog();
 
+                    auto sourceLine = log->toRootLine(lineNum);
+                    auto text = log->rootLog()->readLine(sourceLine);
+                    auto time = searchTime(sourceLine,edit);
+
+                    qDebug()<<"time:"<< time;
+                    auto contentRx = Controller::instance().getContent();
+                    text.indexOf(contentRx);
+                    if(contentRx.capturedTexts()[0].isEmpty()){
+                       text = contentRx.capturedTexts()[0];
+                    }
+                    mTimeTrace->addNode(i,sourceLine, text,time);
+                });
+
+            }
+            menu->addMenu(traceMenu);
+
+        }
         if (!cursorWord.isEmpty()) {
             menu->addSeparator();
 
@@ -275,6 +310,22 @@ void DocumentTab::bindController()
                 );
     mConnections.push_back(
                 connect(
+                    action.actionFor(Controller::AddTimeTrace),
+                    &QAction::triggered,
+                    this,
+                    &DocumentTab::addTimeTrace
+                    )
+                );
+    mConnections.push_back(
+                connect(
+                    action.actionFor(Controller::ClearTimeTrace),
+                    &QAction::triggered,
+                    mTimeTrace,
+                    &TimeTrace::clear
+                    )
+                );
+    mConnections.push_back(
+                connect(
                     action.actionFor(Controller::SetPattern), 
                     &QAction::triggered, 
                     this, 
@@ -317,6 +368,20 @@ void DocumentTab::loadCurrentTaglist(LogEdit* editor)
           taglist->addTag(p.key, p.color);
       }
 
+}
+
+void DocumentTab::addTimeTrace()
+{
+    QCoreApplication::setAttribute(Qt::AA_DisableWindowContextHelpButton);
+    // 关闭  "?"  按钮
+    bool ok = false;
+    QString name = QString("");
+    name = QInputDialog::getText(this, tr("新建追踪线"),
+                    tr("追踪线名称:"), QLineEdit::Normal,
+                   "", &ok);
+
+    qDebug()<<"Trace:"<< name;
+    mTimeTrace->addTrace(name);
 }
 
 void DocumentTab::addHighlight()

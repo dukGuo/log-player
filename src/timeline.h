@@ -33,6 +33,7 @@ public slots:
 
 signals:
     void nodeSelected(TimeNode* node);
+    void lineEmpty(TimeLine* node);
 
 private slots:
     void deleteNode(TimeNode* node);

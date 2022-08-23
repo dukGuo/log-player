@@ -118,7 +118,7 @@ QMenu*   MainWindow::buildFileMenu()
     menu->addAction(action.actionFor(Controller::CloseTab));
     //menu->addMenu("Settings"); // TODO  设置对话窗口
     menu->addSeparator();
-    //menu->addMenu("Split File..."); // TODO  文件分割
+    //menu->addMenu("Split File...");
     menu->addAction(action.actionFor(Controller::SplitFile));
     menu->addSeparator();
     menu->addAction(action.actionFor(Controller::Shortcut));
@@ -164,6 +164,8 @@ QMenu*   MainWindow::buildTimelineMenu()
     menu->addAction(action.actionFor(Controller::SetPattern));
     //menu->addMenu("Export Timeline");
     menu->addSeparator();
+    menu->addAction(action.actionFor(Controller::AddTimeTrace));
+    menu->addAction(action.actionFor(Controller::ClearTimeTrace));
     menu->addAction(action.actionFor(Controller::SaveTimeLine));
     //menu->addMenu("Clear Timeline");
     menu->addAction(action.actionFor(Controller::ClearTimeLine));
