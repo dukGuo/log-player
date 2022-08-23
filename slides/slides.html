@@ -68,6 +68,14 @@
     <h1>功能简介</h1>
 
   </section>
+  <section id="背景" class="slide level2">
+    <h2>任务背景</h2>
+
+    <ul>
+      <p>目前在排查问题时，由于多线程下业务繁多，从而在定位问题时，很难跟进上下文。尽管业务已有traceId,但是串联起来还是比较耗时。因而需要约定日志打印方式，以及实现相应的日志查看工具。</p>
+     <img width="600px" style="padding-left: 150px;" src="image/slides/log.png">
+    </ul>
+  </section> 
   <section id="界面布局" class="slide level2">
     <h2>界面布局</h2>
     <ul>
@@ -166,6 +174,22 @@
       </li>
       <li>导出当前时间线</li>
     </ul>
+  </section>
+  <section id="时间线功能拓展" class="slide level2">
+    <h2>时间线分析拓展</h2>
+    <ul>
+      <li>基于单时间线分析,实现多时间线追踪功能</li>
+      <ul>
+        <li>更广泛的适用性: 多线程日志分析</li>
+        <li>保留了单时间线的高亮动画,删除定位行功能</li>
+        <li>与过滤功能共同使用,事半功倍</li>
+      </ul>
+     
+    </ul>
+    <table>
+      <td><img width="500px" src="image/slides/trace1.png"></td>
+      <td><img width="400px"src="image/slides/trace2.png"></td>
+    </table>
   </section>
   <section id="番外功能" class="slide level2">
     <h2>番外功能</h2>
@@ -636,8 +660,9 @@ int ILog::createChild(SearchArg arg, QString id)
         <ul>
           <li><strong>TimeHead</strong>用来显示节点位置及时间信息</li>
           <li><strong>TimeBody</strong>用来显示TimeNode的日志内容</li>
-          <img width="600px" src="image/slides/timeline1.png">
+          <img width="400px" src="image/slides/timeline1.png" style="margin-bottom: 0px;">
         </ul>
+      <li>TimeTrace = List&lt;string&gt; + List&lt;timeline&gt;</li>
     </ul>
 
   </section>
@@ -678,7 +703,8 @@ void DocumentTab::deepEmphasizeLine(const shared_ptr<ILog> &log, int line, const
 
       </script></code></pre>  
     
-    </section>
+
+  </section>
   <section id="其他子模块" class="slide level2">
     <h2>其他子模块</h2>
     <ul>
@@ -697,16 +723,44 @@ void DocumentTab::deepEmphasizeLine(const shared_ptr<ILog> &log, int line, const
 </section>
 <section>
   <section id="实习感想" class="title-slide slide level1">
-    <h1>实习感想</h1>
+    <h1>实习总结</h1>
 
   </section>
-  <section id="实习感想-1" class="slide level2">
-    <h2>实习感想</h2>
+  <section id="实习总结" class="slide level2">
+    <h2>实习总结</h2>
+    <hr>
     <ul>
-      <li>Qt</li>
-      <li>实践</li>
+      <li>基本完成了既定的实习任务</li>
+      <li>在既定实习任务的基础上,加入了自己的想法</li>
+      <li>受限于能力和精力,一些功能尚未完善</li>
     </ul>
   </section>
+  <section id="实习感想1" class="slide level2">
+      <h2>实习感想</h2>
+      <hr>
+      <ul>
+        <li>Qt</li>
+        <ul>
+          <li>从零开始,在实践中学习熟悉了Qt框架</li>
+          <li>完整的经历了一次GUI程序的实现，不再惧怕界面开发</li>
+        </ul>
+        <hr>
+        <li>实践</li>
+        <ul>
+          <li>mmap,map/reduce等不再是PPT上考点,而是实际的代码</li>
+          <li>在实践中不断接触学习新的东西</li>
+        </ul>
+        <hr>
+        <p>同时,也很感谢公司提供这次实习机会</p>
+      </ul>
+    </section>  
+    <section id="thank" class="slide level2">
+      <h1>
+      <span>Thanks For Watch!</span>
+      </h1>
+      <hr>
+      <p style="text-align: center;">And <strong>Q&A</strong></p>
+    </section>
 </section>
 
     </div>
