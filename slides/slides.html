@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="log-player">
-  <title>实习汇报</title>
+  <title>slides</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -145,7 +145,7 @@
       <hr>
       <li>右键快捷过滤</li>
       <li>大小写模糊/正则表达式</li>
-      <p><strong>eg:&nbsp;</strong>&nbsp;\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]</p>
+      <p style="font-size:28px;"><strong>eg:&nbsp;</strong>&nbsp;\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]</p>
       <li>正向/反向过滤</li>
       <li>子窗口显示</li>
       <ul>
@@ -162,7 +162,7 @@
       <li>以行号为ID,时间为副ID,整行为内容
         <ul>
           <li>更改时间/内容匹配模板</li>
-          <p><strong>eg:&nbsp;</strong>&nbsp;\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]</p>
+          <p style="font-size:28px;"><strong>eg:&nbsp;</strong>&nbsp;\[[0-9]{4}-[0-1][0-9]-[0-3][0-9]</p>
           <li>子窗口添加时间点</li>
         </ul>
       </li>
@@ -301,7 +301,7 @@
     <h2>控制模块</h2>
     <ul>
       <li>Controller.h</li>
-      <pre class="cpp"><code data-trim data-line-numbers="|4-21|,|23,24,27,28|">
+      <pre class="cpp"><code data-trim data-line-numbers="|4-23,66|,|25,26,29,30|">
         <script type="text/template">
 class Controller
 {
@@ -415,12 +415,6 @@ private:
                 for (auto& p : editor->highlighter()->allQuickHighlights()) {
                  taglist->addTag(p.key, p.color);
                 }
-              }
-              void DocumentTab::unBindController()
-              {
-                for (auto& conn : mConnections)
-                  disconnect(conn);
-                mConnections.clear();
               }
 
             </script></code></pre>
@@ -933,7 +927,7 @@ void DocumentTab::deepEmphasizeLine(const shared_ptr<ILog> &log, int line, const
           width: 1024, height: 768,
           plugins: [ RevealMarkdown, RevealHighlight],
           slideNumber: 'c/t',
-          controlsTutorial: false,
+          controlsTutorial: true,
           progress: false,
           hash: true,
           center: false,
