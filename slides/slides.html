@@ -267,7 +267,7 @@
   <section id="后端-contd" class="slide level2">
     <h2>后端 (cont'd)</h2>
     <ul>
-      <li>文件读取方式: <strong>open+read</strong> 代替<strong> open+mmap</strong></li>
+      <li>文件读取方式: <strong>open+mmap</strong> 代替<strong> open+read</strong></li>
     </ul>
     <pre class="cpp"><code data-trim data-line-numbers="|8|">
             <script type="text/template">
@@ -316,6 +316,8 @@ public:
         SetPattern,   
         SaveTimeLine,
         ClearTimeLine,
+        AddTimeTrace,
+        ClearTimeTrace,
         Find,
         RevertFind,     
         FindNext,
